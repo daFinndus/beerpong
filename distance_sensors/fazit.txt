@@ -1,0 +1,2 @@
+Die Arbeit mit den Sensoren lief schlecht. Wir haben viel ausprobiert, Infrarot-Sensoren und Ultraschall genutzt.
+Nichts hat geklappt. Wir haben uns dann entschieden, die Sensoren wegzulassen und uns auf die Objekterkennung zu konzentrieren.
