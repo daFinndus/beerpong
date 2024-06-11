@@ -21,38 +21,13 @@ class MyCamera:
         # Turn off auto white balance and auto exposure
         self.cap.set(cv2.CAP_PROP_AUTO_WB, 0)
         self.cap.set(cv2.CAP_PROP_AUTO_EXPOSURE, 0)
-        self.cap.set(cv2.CAP_PROP_EXPOSURE, -7.0)
+        self.cap.set(cv2.CAP_PROP_EXPOSURE, -6.0)
 
-        # Following variables are used for tracking the ball
-        self.prev_center = None
-        self.ball_center = None
-        self.ball_radius = None
+        # Following variables are used for tracking the balls
+        self.ball_centers = []
+        self.ball_radii = []
 
         self.cup_positions = []  # Set the positions of the cups here
-
-        cv2.namedWindow('Image')
-
-        self.brightness = 50
-        self.contrast = 50
-
-        # Create trackbars for adjusting brightness and contrast
-        cv2.createTrackbar('Brightness', 'Image', self.brightness, 100, self.on_trackbar_brightness)
-        cv2.createTrackbar('Contrast', 'Image', self.contrast, 100, self.on_trackbar_contrast)
-
-    # Function for trackbar
-    def on_trackbar_brightness(self, x):
-        self.brightness = cv2.getTrackbarPos('Brightness', 'Image') - 50
-        print(f"Brightness: {self.brightness}")
-
-    # Function for trackbar
-    def on_trackbar_contrast(self, x):
-        self.contrast = cv2.getTrackbarPos('Contrast', 'Image') - 50
-        print(f"Contrast: {self.contrast}")
-
-    # Function for adjusting the brightness and contrast of an image
-    def adjust_brightness_contrast(self, image):
-        adjusted = cv2.convertScaleAbs(image, alpha=1 + self.contrast / 50.0, beta=self.brightness)
-        return adjusted
 
     # Function for recording an image and converting it to an array
     def capture_image(self):
@@ -86,26 +61,28 @@ class MyCamera:
 
         contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+        self.ball_centers = []
+        self.ball_radii = []
+
         # If contours is not empty
         if contours:
-            # Find the largest contour in the mask
-            # Then use it to compute the minimum enclosing circle and centroid
-            c = max(contours, key=cv2.contourArea)
-            ((x, y), radius) = cv2.minEnclosingCircle(c)
-            M = cv2.moments(c)
-            center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+            for c in contours:
+                ((x, y), radius) = cv2.minEnclosingCircle(c)
+                M = cv2.moments(c)
+                if M["m00"] > 0:
+                    center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                else:
+                    center = None
 
-            if radius > 10:
-                # Draw the circle and centroid on the frame
-                cv2.circle(image, (int(x), int(y)), int(radius), (0, 255, 255), 2)
-                cv2.circle(image, center, 5, (0, 0, 255), -1)
+                if radius > 10:
+                    # Draw the circle and centroid on the frame
+                    cv2.circle(image, (int(x), int(y)), int(radius), (0, 255, 255), 2)
+                    if center:
+                        cv2.circle(image, center, 5, (0, 0, 255), -1)
 
-                self.ball_radius = radius
-                self.ball_center = center
-                print(f"Ball at position: {center} with radius: {radius}")
-
-            # Update the previous center
-            self.prev_center = center
+                    self.ball_centers.append(center)
+                    self.ball_radii.append(radius)
+                    print(f"Ball at position: {center} with radius: {radius}")
 
         return image
 
@@ -115,11 +92,11 @@ class MyCamera:
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         # Define the range of white color in HSV
-        white_upper_0 = np.array([130, 100, 255])
-        white_lower_0 = np.array([0, 0, 150])
+        white_upper_0 = np.array([130, 50, 150])
+        white_lower_0 = np.array([0, 0, 50])
 
         # Different white range
-        white_upper_1 = np.array([180, 255, 255])
+        white_upper_1 = np.array([180, 100, 255])
         white_lower_1 = np.array([0, 0, 200])
 
         # Create masks for red color
@@ -162,11 +139,7 @@ class MyCamera:
 
     # Function for processing an image with a certain function
     def process_frame(self, frame):
-        print("Going to process the frame.")
-        frame = self.adjust_brightness_contrast(frame)
-        print("Brightness and contrast adjusted.")
         frame = self.track_ball(frame)
-        print("Ball tracked.")
         return frame
 
     # This is basically our main loop
@@ -175,39 +148,36 @@ class MyCamera:
             # Capture an image
             image = self.capture_image()
             if image is not None:
-                print("Image captured.")
-                # Get processed image from the future
-                processed_image = self.process_frame(image)
-                print("Frame processed.")
+                # Track the ball in the image
+                self.track_ball(image)
 
-                # Track the cups in the processed image
-                self.track_cups(processed_image)
-                print("Cups tracked.")
+                # Track the cups in the image
+                self.track_cups(image)
 
                 for cup in self.cup_positions:
-                    print("Got cup: ", cup)
-                    hit = self.check_ball_in_cup(self.ball_center, self.ball_radius, cup)
+                    for center, radius in zip(self.ball_centers, self.ball_radii):
+                        hit = self.check_ball_in_cup(center, radius, cup)
 
-                    if hit is not None:
-                        print(f"Ball is in cup at position: {hit[0], hit[1]} with radius: {hit[2]}")
-                        break
-                    else:
-                        print("Ball is not in any cup.")
+                        if hit is not None:
+                            print(f"Ball is in cup at position: {hit[0], hit[1]} with radius: {hit[2]}")
+                            break
+                        else:
+                            print("Ball is not in any cup.")
 
-                        # Display processed image
-                        try:
-                            cv2.imshow("Image", processed_image)
-                            print("Image displayed.")
-                        except Exception as e:
-                            print(f"Error displaying image: {e}")
+                # Display processed image
+                try:
+                    cv2.imshow("Image", image)
+                except Exception as e:
+                    print(f"Error displaying image: {e}")
 
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
-                        break
-                    else:
-                        print("Failed to capture an image.")
-                        break
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
 
-            cv2.destroyAllWindows()
+            else:
+                print("Failed to capture an image.")
+                break
+
+        cv2.destroyAllWindows()
 
     # Destructor method to release the camera and destroy the windows
     def __del__(self):

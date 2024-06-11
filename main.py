@@ -10,4 +10,3 @@ if __name__ == "__main__":
     camera_thread = Thread(target=camera.run)
 
     camera_thread.start()
-    gui.run()
