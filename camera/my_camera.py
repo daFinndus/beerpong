@@ -1,5 +1,4 @@
 import cv2
-
 import numpy as np
 
 
@@ -31,6 +30,30 @@ class MyCamera:
 
         self.cup_positions = []  # Set the positions of the cups here
 
+        cv2.namedWindow('Image')
+
+        self.brightness = 50
+        self.contrast = 50
+
+        # Create trackbars for adjusting brightness and contrast
+        cv2.createTrackbar('Brightness', 'Image', self.brightness, 100, self.on_trackbar_brightness)
+        cv2.createTrackbar('Contrast', 'Image', self.contrast, 100, self.on_trackbar_contrast)
+
+    # Function for trackbar
+    def on_trackbar_brightness(self, x):
+        self.brightness = cv2.getTrackbarPos('Brightness', 'Image') - 50
+        print(f"Brightness: {self.brightness}")
+
+    # Function for trackbar
+    def on_trackbar_contrast(self, x):
+        self.contrast = cv2.getTrackbarPos('Contrast', 'Image') - 50
+        print(f"Contrast: {self.contrast}")
+
+    # Function for adjusting the brightness and contrast of an image
+    def adjust_brightness_contrast(self, image):
+        adjusted = cv2.convertScaleAbs(image, alpha=1 + self.contrast / 50.0, beta=self.brightness)
+        return adjusted
+
     # Function for recording an image and converting it to an array
     def capture_image(self):
         if not self.cap.isOpened():
@@ -48,7 +71,6 @@ class MyCamera:
 
     # This function is for ball segmentation and tracking
     def track_ball(self, image):
-
         # Make the same for debug reasons but in a red color
         orange_lower = np.array([5, 150, 150])
         orange_upper = np.array([15, 255, 255])
@@ -140,7 +162,11 @@ class MyCamera:
 
     # Function for processing an image with a certain function
     def process_frame(self, frame):
+        print("Going to process the frame.")
+        frame = self.adjust_brightness_contrast(frame)
+        print("Brightness and contrast adjusted.")
         frame = self.track_ball(frame)
+        print("Ball tracked.")
         return frame
 
     # This is basically our main loop
@@ -149,11 +175,14 @@ class MyCamera:
             # Capture an image
             image = self.capture_image()
             if image is not None:
+                print("Image captured.")
                 # Get processed image from the future
                 processed_image = self.process_frame(image)
+                print("Frame processed.")
 
                 # Track the cups in the processed image
                 self.track_cups(processed_image)
+                print("Cups tracked.")
 
                 for cup in self.cup_positions:
                     print("Got cup: ", cup)
@@ -165,18 +194,24 @@ class MyCamera:
                     else:
                         print("Ball is not in any cup.")
 
-                # Display processed image
-                cv2.imshow("Processed Image", processed_image)
+                        # Display processed image
+                        try:
+                            cv2.imshow("Image", processed_image)
+                            print("Image displayed.")
+                        except Exception as e:
+                            print(f"Error displaying image: {e}")
 
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-            else:
-                print("Failed to capture an image.")
-                break
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        break
+                    else:
+                        print("Failed to capture an image.")
+                        break
 
-    cv2.destroyAllWindows()
+            cv2.destroyAllWindows()
 
-    # Destructor method to release the camera when the object is destroyed
+    # Destructor method to release the camera and destroy the windows
     def __del__(self):
         if self.cap.isOpened():
             self.cap.release()
+            cv2.destroyAllWindows()
+            print("Camera released and windows destroyed.")
