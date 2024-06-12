@@ -45,6 +45,9 @@ class MyGUI:
     def draw_cups(self, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
 
+        for hit_cup in self.hit_cups:
+            print(f"Hit cup: {hit_cup}")
+
         for cup in cup_positions:
             x, y, radius = cup
 
@@ -54,7 +57,6 @@ class MyGUI:
                 self.score_label.configure(text=f"Score: {self.root_counter}")
                 color = "gray"
             else:
-                print(f"Cup at position: {x, y} with radius: {radius} is not in the hit_cups list!")
                 color = "red"
 
             self.canvas.create_oval(
