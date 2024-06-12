@@ -107,7 +107,7 @@ class MyCamera:
         # Find contours in the red mask
         contours, _ = cv2.findContours(white_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        min_radius = 80
+        min_radius = 60
         max_radius = 200
 
         # Store cups with their positions in our list
