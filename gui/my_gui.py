@@ -45,10 +45,6 @@ class MyGUI:
     def draw_cups(self, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
 
-        for hit_cup in self.hit_cups:
-            print(f"Hit cup: {hit_cup}")
-            print(" ")
-
         for cup in cup_positions:
             x, y, radius = cup
 
