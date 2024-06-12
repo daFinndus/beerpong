@@ -48,7 +48,8 @@ class MyGUI:
                 x - radius, y - radius, x + radius, y + radius, fill="red", outline="black"
             )
 
-    """def circle_clicked(self, event):
+    """
+    def circle_clicked(self, event):
         item = self.canvas.find_closest(event.x, event.y)[0]
         self.canvas.itemconfigure(item, fill="gray")
         self.root.counter += 1
@@ -66,9 +67,11 @@ class MyGUI:
         elif self.click_counter == 10:
             self.canvas.delete("all")
             self.canvas.create_text(self.canvas_width // 2, self.canvas_height // 2,
-                                    text="Congratulations! You won!", font=("Arial", 24), fill="white")"""
+                                    text="Congratulations! You won!", font=("Arial", 24), fill="white")
+    """
 
-    """def redraw_pyramid(self):
+    """
+    def redraw_pyramid(self):
         self.canvas.delete("all")
         if self.click_counter == 4:
             self.num_circles = 6
@@ -76,7 +79,8 @@ class MyGUI:
             self.num_circles = 3
         elif self.click_counter == 9:
             self.num_circles = 1
-        self.draw_pyramid()"""
+        self.draw_pyramid()
+    """
 
     def display_name(self):
         name = self.myentry.get()
@@ -88,10 +92,11 @@ class MyGUI:
             self.reset_game_button.pack(pady=10)
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
-            "self.draw_pyramid()"
+            # self.draw_pyramid()
             self.canvas.pack()
 
-    """def draw_pyramid(self):
+    """
+    def draw_pyramid(self):
         x0 = self.canvas_width // 2 - (self.radius * (self.num_circles / 2))
         y0 = self.canvas_height // 2
         rows = (self.num_circles + 1) // 2
@@ -106,7 +111,8 @@ class MyGUI:
                     fill="red", outline="black"
                 )
                 self.canvas.tag_bind(circle, '<Button-1>',
-                                     lambda e: self.circle_clicked(e))  # Mausklick-Ereignis binden"""
+                                     lambda e: self.circle_clicked(e))  # Mausklick-Ereignis binden
+    """
 
     def reset_game(self):
         if self.click_counter == 10:
@@ -128,8 +134,10 @@ class MyGUI:
         self.score_label.pack_forget()
         self.canvas.pack_forget()
 
-    """def run(self):
-        self.root.mainloop()"""
+    """
+    def run(self):
+        self.root.mainloop()
+    """
 
     def run(self, camera):
         while True:
