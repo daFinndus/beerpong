@@ -52,7 +52,7 @@ class MyGUI:
         for cup in cup_positions:
             x, y, radius = cup
 
-            print(f"Comparing cup at position: {x, y} with radius: {radius} with hit_cups: {self.hit_cups}")
+            print(f"Comparing cup at position: {x, y, radius} with hit_cups: {self.hit_cups}")
 
             if (x, y, radius) in self.hit_cups:
                 print(f"Cup at position: {x, y} with radius: {radius} is in the hit_cups list!")
