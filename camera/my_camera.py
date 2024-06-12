@@ -33,7 +33,7 @@ class MyCamera:
     def capture_image(self):
         if not self.cap.isOpened():
             print("Error: Unable to open camera.")
-            self.cap.open(1)  # .open(1) is for Windows, .open(/dev/video0) is for Raspbian
+            self.cap.open('/dev/video0')  # .open(1) is for Windows, .open(/dev/video0) is for Raspbian
             print("Camera opened successfully.")
 
         ret, frame = self.cap.read()
