@@ -4,7 +4,7 @@ import numpy as np
 
 class MyCamera:
     def __init__(self):
-        self.cap = cv2.VideoCapture('/dev/video0')  # 1 is for Windows, 'dev/video0' is for Raspbian
+        self.cap = cv2.VideoCapture('/dev/video0')  # '1' is for Windows, 'dev/video0' is for Raspbian
 
         # Set the desired width and height
         self.width = 640
@@ -29,7 +29,6 @@ class MyCamera:
 
         self.cup_positions = []  # Set the positions of the cups here
 
-    # Function for recording an image and converting it to an array
     def capture_image(self):
         if not self.cap.isOpened():
             print("Error: Unable to open camera.")
@@ -44,17 +43,13 @@ class MyCamera:
             print("Unable to capture an image.")
             return None
 
-    # This function is for ball segmentation and tracking
     def track_ball(self, image):
-        # Make the same for debug reasons but in a red color
         orange_lower = np.array([5, 150, 150])
         orange_upper = np.array([15, 255, 255])
 
-        # Resize, blur and convert the image to HSV
         blurred = cv2.GaussianBlur(image, (11, 11), 0)
         hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
 
-        # Use masks to segment the white color
         mask = cv2.inRange(hsv, orange_lower, orange_upper)
         mask = cv2.erode(mask, None, iterations=1)
         mask = cv2.dilate(mask, None, iterations=1)
@@ -64,7 +59,6 @@ class MyCamera:
         self.ball_centers = []
         self.ball_radii = []
 
-        # If contours is not empty
         if contours:
             for c in contours:
                 ((x, y), radius) = cv2.minEnclosingCircle(c)
@@ -75,7 +69,6 @@ class MyCamera:
                     center = None
 
                 if radius > 10:
-                    # Draw the circle and centroid on the frame
                     cv2.circle(image, (int(x), int(y)), int(radius), (0, 255, 255), 2)
                     if center:
                         cv2.circle(image, center, 5, (0, 0, 255), -1)
@@ -86,31 +79,28 @@ class MyCamera:
 
         return image
 
-    # Function for tracking all the ten cups in our image
     def track_cups(self, image):
-        # Convert the image to HSV color space
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-        # Define the range of white color in HSV for very shadey white (almost gray)
-        white_lower_0 = np.array([0, 0, 50])  # Low saturation and value
-        white_upper_0 = np.array([150, 30, 100])  # Slightly higher saturation and value
+        white_lower_0 = np.array([0, 0, 50])
+        white_upper_0 = np.array([180, 50, 150])
 
-        # Define the range of white color in HSV for very bright white
-        white_lower_1 = np.array([0, 0, 255])  # Low saturation, high value
-        white_upper_1 = np.array([180, 150, 255])  # Slightly higher saturation, maximum value
+        white_lower_1 = np.array([0, 0, 200])
+        white_upper_1 = np.array([180, 100, 255])
 
-        # Create masks for red color
         mask1 = cv2.inRange(hsv, white_lower_0, white_upper_0)
         mask2 = cv2.inRange(hsv, white_lower_1, white_upper_1)
         white_mask = cv2.bitwise_or(mask1, mask2)
 
-        # Find contours in the red mask
+        white_mask = cv2.erode(white_mask, None, iterations=2)
+        white_mask = cv2.dilate(white_mask, None, iterations=2)
+        white_mask = cv2.GaussianBlur(white_mask, (5, 5), 0)
+
         contours, _ = cv2.findContours(white_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         min_radius = 40
         max_radius = 120
 
-        # Store cups with their positions in our list
         cups = [(int(x), int(y), int(radius)) for cnt in contours if cv2.contourArea(cnt) > 500 for ((x, y), radius) in
                 [cv2.minEnclosingCircle(cnt)] if min_radius < radius < max_radius]
 
@@ -121,38 +111,32 @@ class MyCamera:
         self.cup_positions = cups
         return image, cups
 
-    # Function to check if ball is in any cup
     def check_ball_in_cup(self, ball_center, ball_radius, cup):
         if ball_center is None:
             return None
 
-        # Unpack our cup information
         (x, y, cup_radius) = cup
-
-        # Calculate if our ball is in the cup
         distance = np.sqrt((ball_center[0] - x) ** 2 + (ball_center[1] - y) ** 2)
 
-        # If the distance is less than the radius of the cup minus the radius of the ball
         if distance < cup_radius - ball_radius:
-            return x, y, cup_radius  # Return the cup in which the ball is found
+            return x, y, cup_radius
         return None
 
-    # Function for processing an image with a certain function
     def process_frame(self, frame):
         frame = self.track_ball(frame)
         return frame
 
-    # This is basically our main loop
     def run(self):
+        print("Taking initial photo to detect cups...")
+        initial_image = self.capture_image()
+        if initial_image is not None:
+            _, cups = self.track_cups(initial_image)
+            print(f"Detected cups: {cups}")
+
         while True:
-            # Capture an image
             image = self.capture_image()
             if image is not None:
-                # Track the ball in the image
                 self.track_ball(image)
-
-                # Track the cups in the image
-                self.track_cups(image)
 
                 for cup in self.cup_positions:
                     for center, radius in zip(self.ball_centers, self.ball_radii):
@@ -164,7 +148,6 @@ class MyCamera:
                         else:
                             print("Ball is not in any cup.")
 
-                # Display processed image
                 try:
                     cv2.imshow("Image", image)
                 except Exception as e:
@@ -179,7 +162,6 @@ class MyCamera:
 
         cv2.destroyAllWindows()
 
-    # Destructor method to release the camera and destroy the windows
     def __del__(self):
         if self.cap.isOpened():
             self.cap.release()
