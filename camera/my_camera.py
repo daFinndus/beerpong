@@ -91,13 +91,13 @@ class MyCamera:
         # Convert the image to HSV color space
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-        # Define the range of white color in HSV
-        white_upper_0 = np.array([130, 50, 150])
-        white_lower_0 = np.array([0, 0, 50])
+        # Define the range of white color in HSV for very shadey white (almost gray)
+        white_lower_0 = np.array([0, 0, 50])  # Low saturation and value
+        white_upper_0 = np.array([180, 50, 150])  # Slightly higher saturation and value
 
-        # Different white range
-        white_upper_1 = np.array([180, 100, 255])
-        white_lower_1 = np.array([0, 0, 200])
+        # Define the range of white color in HSV for very bright white
+        white_lower_1 = np.array([0, 0, 200])  # Low saturation, high value
+        white_upper_1 = np.array([180, 100, 255])  # Slightly higher saturation, maximum value
 
         # Create masks for red color
         mask1 = cv2.inRange(hsv, white_lower_0, white_upper_0)
