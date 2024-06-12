@@ -38,60 +38,28 @@ class MyGUI:
         self.myentry.bind("<Return>", lambda event: self.display_name())
 
         self.reset_game_button = ctk.CTkButton(self.root, text="Reset Score", command=self.reset_game)
-
         self.reset_all_button = ctk.CTkButton(self.root, text="Reset All", command=self.reset_all)
 
         self.hit_cups = []
 
     def draw_cups(self, cup_positions):
-        color = "red"
+        self.canvas.delete("all")  # Clear the canvas before drawing
 
         for cup in cup_positions:
             x, y, radius = cup
 
-            if cup in self.hit_cups:
+            if (x, y, radius) in self.hit_cups:
                 print(f"Cup at position: {x, y} with radius: {radius} is in the hit_cups list!")
                 self.root_counter += 1
                 self.score_label.configure(text=f"Score: {self.root_counter}")
                 color = "gray"
+            else:
+                print(f"Cup at position: {x, y} with radius: {radius} is not in the hit_cups list!")
+                color = "red"
 
             self.canvas.create_oval(
                 x - radius, y - radius, x + radius, y + radius, fill=color, outline="black"
             )
-
-    """
-    def circle_clicked(self, event):
-        item = self.canvas.find_closest(event.x, event.y)[0]
-        self.canvas.itemconfigure(item, fill="gray")
-        self.root.counter += 1
-        self.score_label.configure(text=f"Score: {self.root.counter}")
-        self.click_counter += 1
-        if self.click_counter == 4:
-            self.num_circles = 6
-            self.redraw_pyramid()
-        elif self.click_counter == 7:
-            self.num_circles = 3
-            self.redraw_pyramid()
-        elif self.click_counter == 9:
-            self.num_circles = 1
-            self.redraw_pyramid()
-        elif self.click_counter == 10:
-            self.canvas.delete("all")
-            self.canvas.create_text(self.canvas_width // 2, self.canvas_height // 2,
-                                    text="Congratulations! You won!", font=("Arial", 24), fill="white")
-    """
-
-    """
-    def redraw_pyramid(self):
-        self.canvas.delete("all")
-        if self.click_counter == 4:
-            self.num_circles = 6
-        elif self.click_counter == 7:
-            self.num_circles = 3
-        elif self.click_counter == 9:
-            self.num_circles = 1
-        self.draw_pyramid()
-    """
 
     def display_name(self):
         name = self.myentry.get()
@@ -103,27 +71,7 @@ class MyGUI:
             self.reset_game_button.pack(pady=10)
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
-            # self.draw_pyramid()
             self.canvas.pack()
-
-    """
-    def draw_pyramid(self):
-        x0 = self.canvas_width // 2 - (self.radius * (self.num_circles / 2))
-        y0 = self.canvas_height // 2
-        rows = (self.num_circles + 1) // 2
-        for i in range(rows):
-            for j in range(i + 1):
-                circle = self.canvas.create_oval(
-                    x0 + j * (2 * self.radius + self.gap) + (rows - i - 1) * (self.radius + self.gap),  # x-Koordinate
-                    y0 - i * (2 * self.radius + self.gap),  # y-Koordinate
-                    x0 + j * (2 * self.radius + self.gap) + 2 * self.radius + (rows - i - 1) * (self.radius + self.gap),
-                    # x-Koordinate + Durchmesser
-                    y0 - i * (2 * self.radius + self.gap) + 2 * self.radius,  # y-Koordinate + Durchmesser
-                    fill="red", outline="black"
-                )
-                self.canvas.tag_bind(circle, '<Button-1>',
-                                     lambda e: self.circle_clicked(e))  # Mausklick-Ereignis binden
-    """
 
     def reset_game(self):
         if self.click_counter == 10:
@@ -132,7 +80,6 @@ class MyGUI:
             self.click_counter = 0
             self.num_circles = 8
             self.canvas.delete("all")
-            "self.draw_pyramid()"
 
     def reset_all(self):
         self.reset_game()
@@ -145,13 +92,7 @@ class MyGUI:
         self.score_label.pack_forget()
         self.canvas.pack_forget()
 
-    """
-    def run(self):
-        self.root.mainloop()
-    """
-
     def run(self, camera):
-        hit_cup = None
         self.hit_cups = []
 
         while True:
@@ -162,7 +103,7 @@ class MyGUI:
                 for center, radius in zip(camera.ball_centers, camera.ball_radii):
                     hit_cup = camera.check_ball_in_cup(center, radius, cup)
 
-                    if hit_cup:
+                    if hit_cup and hit_cup not in self.hit_cups:
                         self.hit_cups.append(hit_cup)
 
             self.draw_cups(scaled_cup_positions)
