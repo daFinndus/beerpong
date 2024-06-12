@@ -173,7 +173,7 @@ class MyCamera:
             print(f"Detected cups: {cups}")
 
             start_time = time.time()
-            while time.time() - start_time < 15:
+            while time.time() - start_time < 5:
                 try:
                     cv2.imshow("Initial Image", initial_image)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
