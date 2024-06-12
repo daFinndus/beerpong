@@ -39,7 +39,7 @@ class MyCamera:
         return True
 
     # Function for recording an image and converting it to an array
-    """def capture_image(self):
+    def capture_image(self):
         if not self.cap.isOpened():
             print("Error: Unable to open camera.")
             self.cap.open('/dev/video0')  # .open(1) is for Windows, .open(/dev/video0) is for Raspbian
@@ -51,7 +51,7 @@ class MyCamera:
             return frame
         else:
             print("Unable to capture an image.")
-            return None"""
+            return None
 
     # This function is for ball segmentation and tracking
     def track_ball(self, image):
