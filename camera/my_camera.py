@@ -156,7 +156,7 @@ class MyCamera:
                     for center, radius in zip(self.ball_centers, self.ball_radii):
                         hit = self.check_ball_in_cup(center, radius, cup)
 
-                        if hit is not None:
+                        if hit:
                             print(f"Ball is in cup at position: {hit[0], hit[1]} with radius: {hit[2]}")
                             break
                         else:
