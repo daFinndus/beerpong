@@ -134,6 +134,10 @@ class MyCamera:
             _, cups = self.track_cups(initial_image)
             print(f"Detected cups: {cups}")
 
+            # Draw a circle around each cup
+            for cup in cups:
+                cv2.circle(initial_image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
+
         while True:
             image = self.capture_image()
             if image is not None:
