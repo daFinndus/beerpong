@@ -43,13 +43,14 @@ class MyGUI:
 
         self.hit_cups = []
 
-    def draw_cups(self, cup_positions, hit_cup):
+    def draw_cups(self, cup_positions):
         color = "red"
 
         for cup in cup_positions:
             x, y, radius = cup
 
             if (x, y, radius) in self.hit_cups:
+                print(f"Cup at position: {x, y} with radius: {radius} is in the hit_cups list!")
                 self.root_counter += 1
                 self.score_label.configure(text=f"Score: {self.root_counter}")
                 color = "gray"
@@ -162,10 +163,7 @@ class MyGUI:
                     hit_cup = camera.check_ball_in_cup(center, radius, cup)
 
                     if hit_cup:
-                        print("my_gui.py: Found a hitted cup!")
-                        print(
-                            f"my_gui.py: Ball is in cup at position: {hit_cup[0], hit_cup[1]} with radius: {hit_cup[2]}")
                         self.hit_cups.append(hit_cup)
 
-            self.draw_cups(scaled_cup_positions, hit_cup)
+            self.draw_cups(scaled_cup_positions)
             self.root.update()
