@@ -30,7 +30,6 @@ class MyCamera:
         self.ball_radii = []
 
         self.cup_positions = []  # Set the positions of the cups here
-        self.hit_cup = []
 
     def open_camera(self):
         if not cv2.VideoCapture(self.camera_index).isOpened():
@@ -198,8 +197,6 @@ class MyCamera:
 
                         if hit:
                             print(f"Ball is in cup at position: {hit[0], hit[1]} with radius: {hit[2]}")
-                            self.hit_cup.append(hit)
-                            return hit
 
                 try:
                     cv2.imshow("Image", image)
@@ -214,12 +211,6 @@ class MyCamera:
                 break
 
         cv2.destroyAllWindows()
-
-    def get_cup_positions(self):
-        return self.cup_positions
-
-    def get_hit_cup(self):
-        return self.hit_cup
 
     # Destructor method to release the camera and destroy the windows
     def __del__(self):

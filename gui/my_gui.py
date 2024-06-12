@@ -41,20 +41,18 @@ class MyGUI:
 
         self.reset_all_button = ctk.CTkButton(self.root, text="Reset All", command=self.reset_all)
 
-    def draw_cups(self, cup_positions, hit_cup):
-        color = "red"
-
-        for cup in cup_positions:
+    def draw_cups(self, cup_positions, hit_cups):
+        self.canvas.delete("all")  # Clear the canvas before redrawing
+        for index, cup in enumerate(cup_positions):
             x, y, radius = cup
 
-            if hit_cup:
-                self.root_counter += 1
-                self.score_label.configure(text=f"Score: {self.root_counter}")
-                color = "gray"
+            color = "gray" if hit_cups[index] else "red"
 
             self.canvas.create_oval(
                 x - radius, y - radius, x + radius, y + radius, fill=color, outline="black"
             )
+
+        self.score_label.configure(text=f"Score: {self.root_counter}")
 
     """
     def circle_clicked(self, event):
@@ -148,25 +146,17 @@ class MyGUI:
     """
 
     def run(self, camera):
-        hit_cup = None
+        hit_cups = [False] * len(camera.cup_positions)
 
         while True:
-            camera.get_cup_positions()
             scaled_cup_positions = camera.scale_positions(camera_resolution=(640, 480),
                                                           gui_size=(self.canvas_width, self.canvas_height))
 
-            for cup in camera.cup_positions:
+            for i, cup in enumerate(camera.cup_positions):
                 for center, radius in zip(camera.ball_centers, camera.ball_radii):
-                    hit_cup = camera.check_ball_in_cup(center, radius, cup)
+                    if camera.check_ball_in_cup(center, radius, cup):
+                        hit_cups[i] = True
+                        self.root_counter += 1  # Increment score when a ball hits a cup
 
-            self.draw_cups(scaled_cup_positions, hit_cup)
+            self.draw_cups(scaled_cup_positions, hit_cups)
             self.root.update()
-
-
-if __name__ == "__main__":
-    camera = MyCamera()
-    if camera.open_camera():
-        gui = MyGUI()
-        gui.run(camera)
-    else:
-        print("Could not open camera. Exiting.")
