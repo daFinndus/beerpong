@@ -86,30 +86,29 @@ class MyCamera:
 
         return image
 
+    # Function for tracking all the ten cups in our image
     def track_cups(self, image):
         # Convert the image to HSV color space
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-        # Define the range of white color in RGB
-        rgb_lower = np.array([0, 0, 220])
-        rgb_upper = np.array([255, 30, 255])
+        # Define the range of white color in HSV
+        white_upper_0 = np.array([130, 50, 150])
+        white_lower_0 = np.array([0, 0, 50])
 
-        # Convert lower bound RGB to HSV
-        hsv_lower = cv2.cvtColor(np.uint8([[rgb_lower]]), cv2.COLOR_BGR2HSV)[0][0]
-        hsv_upper = cv2.cvtColor(np.uint8([[rgb_upper]]), cv2.COLOR_BGR2HSV)[0][0]
+        # Different white range
+        white_upper_1 = np.array([180, 100, 255])
+        white_lower_1 = np.array([0, 0, 200])
 
-        # Create mask for white color
-        mask = cv2.inRange(hsv, hsv_lower, hsv_upper)
+        # Create masks for red color
+        mask1 = cv2.inRange(hsv, white_lower_0, white_upper_0)
+        mask2 = cv2.inRange(hsv, white_lower_1, white_upper_1)
+        white_mask = cv2.bitwise_or(mask1, mask2)
 
-        # Additional pre-processing to enhance detection
-        mask = cv2.erode(mask, None, iterations=2)
-        mask = cv2.dilate(mask, None, iterations=2)
-        mask = cv2.GaussianBlur(mask, (5, 5), 0)
+        # Find contours in the red mask
+        contours, _ = cv2.findContours(white_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-        min_radius = 80
-        max_radius = 150
+        min_radius = 100
+        max_radius = 130
 
         # Store cups with their positions in our list
         cups = [(int(x), int(y), int(radius)) for cnt in contours if cv2.contourArea(cnt) > 500 for ((x, y), radius) in
