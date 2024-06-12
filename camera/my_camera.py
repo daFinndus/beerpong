@@ -101,8 +101,8 @@ class MyCamera:
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         # Adjusted white ranges for better detection in lower light conditions
-        white_lower_0 = np.array([0, 0, 30])
-        white_upper_0 = np.array([180, 50, 200])
+        white_lower_0 = np.array([0, 0, 50])
+        white_upper_0 = np.array([180, 50, 150])
 
         white_lower_1 = np.array([0, 0, 200])
         white_upper_1 = np.array([180, 100, 255])
