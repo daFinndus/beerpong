@@ -31,6 +31,7 @@ class MyCamera:
 
         self.cup_positions = []  # Set the positions of the cups here
         self.hit_cup = []
+
     def open_camera(self):
         if not cv2.VideoCapture(self.camera_index).isOpened():
             print(f"Camera with index {self.camera_index} is not available.")
