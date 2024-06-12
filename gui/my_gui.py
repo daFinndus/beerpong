@@ -161,6 +161,7 @@ class MyGUI:
                     hit_cup = camera.check_ball_in_cup(center, radius, cup)
 
                     if hit_cup:
+                        print("my_gui.py found a hitted cup!")
                         self.hit_cups.append(hit_cup)
 
             self.draw_cups(scaled_cup_positions, hit_cup)
