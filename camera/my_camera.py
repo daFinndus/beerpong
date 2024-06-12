@@ -99,8 +99,8 @@ class MyCamera:
 
         contours, _ = cv2.findContours(white_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        min_radius = 40
-        max_radius = 120
+        min_radius = 80
+        max_radius = 140
 
         cups = [(int(x), int(y), int(radius)) for cnt in contours if cv2.contourArea(cnt) > 500 for ((x, y), radius) in
                 [cv2.minEnclosingCircle(cnt)] if min_radius < radius < max_radius]
