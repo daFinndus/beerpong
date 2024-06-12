@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import time
 
 
 class MyCamera:
@@ -133,6 +134,15 @@ class MyCamera:
             _, cups = self.track_cups(initial_image)
             print(f"Detected cups: {cups}")
 
+            start_time = time.time()
+            while time.time() - start_time < 15:
+                try:
+                    cv2.imshow("Initial Image", initial_image)
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        break
+                except Exception as e:
+                    print(f"Error displaying initial image: {e}")
+
         while True:
             image = self.capture_image()
             if image is not None:
@@ -140,7 +150,7 @@ class MyCamera:
 
                 # Draw a circle around each cup
                 for cup in self.cup_positions:
-                    cv2.circle(initial_image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
+                    cv2.circle(image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
 
                 for cup in self.cup_positions:
                     for center, radius in zip(self.ball_centers, self.ball_radii):
