@@ -90,12 +90,16 @@ class MyCamera:
         # Convert the image to HSV color space
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
-        # Define the range of white color in HSV based on RGB values
-        white_lower = np.array([30, 28, 150])  # Adjusted HSV lower bound
-        white_upper = np.array([90, 70, 210])  # Adjusted HSV upper bound
+        # Define the range of white color in RGB
+        rgb_lower = np.array([150, 170, 170])
+        rgb_upper = np.array([220, 220, 220])
+
+        # Convert lower bound RGB to HSV
+        hsv_lower = cv2.cvtColor(np.uint8([[rgb_lower]]), cv2.COLOR_BGR2HSV)[0][0]
+        hsv_upper = cv2.cvtColor(np.uint8([[rgb_upper]]), cv2.COLOR_BGR2HSV)[0][0]
 
         # Create mask for white color
-        mask = cv2.inRange(hsv, white_lower, white_upper)
+        mask = cv2.inRange(hsv, hsv_lower, hsv_upper)
 
         # Additional pre-processing to enhance detection
         mask = cv2.erode(mask, None, iterations=2)
