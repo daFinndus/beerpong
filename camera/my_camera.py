@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import time
 
 
 class MyCamera:
@@ -118,8 +119,8 @@ class MyCamera:
 
         contours, _ = cv2.findContours(white_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        min_radius = 40
-        max_radius = 120
+        min_radius = 80
+        max_radius = 140
 
         # Store cups with their positions in our list
         cups = [(int(x), int(y), int(radius)) for cnt in contours if cv2.contourArea(cnt) > 500 for ((x, y), radius) in
@@ -171,6 +172,15 @@ class MyCamera:
             _, cups = self.track_cups(initial_image)
             print(f"Detected cups: {cups}")
 
+            start_time = time.time()
+            while time.time() - start_time < 15:
+                try:
+                    cv2.imshow("Initial Image", initial_image)
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        break
+                except Exception as e:
+                    print(f"Error displaying initial image: {e}")
+
         while True:
             # Capture an image
             image = self.capture_image()
@@ -180,7 +190,7 @@ class MyCamera:
 
                 # Draw a circle around each cup
                 for cup in self.cup_positions:
-                    cv2.circle(initial_image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
+                    cv2.circle(image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
 
                 for cup in self.cup_positions:
                     for center, radius in zip(self.ball_centers, self.ball_radii):
