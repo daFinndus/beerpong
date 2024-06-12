@@ -4,7 +4,7 @@ import numpy as np
 
 class MyCamera:
     def __init__(self):
-        self.cap = cv2.VideoCapture(1)  # .VideoCapture(1) is for Windows, .VideoCapture(/dev/video0) is for Raspbian
+        self.cap = cv2.VideoCapture('/dev/video0')  # 1 is for Windows, 'dev/video0' is for Raspbian
 
         # Set the desired width and height
         self.width = 640
