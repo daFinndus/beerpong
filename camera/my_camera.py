@@ -3,7 +3,8 @@ import numpy as np
 
 
 class MyCamera:
-    def __init__(self):
+    def __init__(self, camera_index=0):
+        self.camera_index = camera_index
         self.cap = cv2.VideoCapture(1)  # .VideoCapture(1) is for Windows, .VideoCapture(/dev/video0) is for Raspbian
 
         # Set the desired width and height
@@ -29,11 +30,18 @@ class MyCamera:
 
         self.cup_positions = []  # Set the positions of the cups here
 
+    def open_camera(self):
+        if not cv2.VideoCapture(self.camera_index).isOpened():
+            print(f"Camera with index {self.camera_index} is not available.")
+            return False
+        self.cap = cv2.VideoCapture(self.camera_index)
+        return True
+
     # Function for recording an image and converting it to an array
-    def capture_image(self):
+    """def capture_image(self):
         if not self.cap.isOpened():
             print("Error: Unable to open camera.")
-            self.cap.open('/dev/video0')  # .open(1) is for Windows, .open(/dev/video0) is for Raspbian
+            self.cap.open(1)  # .open(1) is for Windows, .open(/dev/video0) is for Raspbian
             print("Camera opened successfully.")
 
         ret, frame = self.cap.read()
@@ -42,7 +50,7 @@ class MyCamera:
             return frame
         else:
             print("Unable to capture an image.")
-            return None
+            return None"""
 
     # This function is for ball segmentation and tracking
     def track_ball(self, image):
@@ -142,6 +150,16 @@ class MyCamera:
         frame = self.track_ball(frame)
         return frame
 
+    def scale_positions(self, camera_resolution, gui_size):
+        scaled_positions = []
+        for cup in self.cup_positions:
+            x, y, radius = cup
+            scaled_x = int(x * gui_size[0] / camera_resolution[0])
+            scaled_y = int(y * gui_size[1] / camera_resolution[1])
+            scaled_radius = int(radius * min(gui_size[0] / camera_resolution[0], gui_size[1] / camera_resolution[1]))
+            scaled_positions.append((scaled_x, scaled_y, scaled_radius))
+        return scaled_positions
+
     # This is basically our main loop
     def run(self):
         while True:
@@ -178,6 +196,9 @@ class MyCamera:
                 break
 
         cv2.destroyAllWindows()
+
+    def get_cup_positions(self):
+        return self.cup_positions
 
     # Destructor method to release the camera and destroy the windows
     def __del__(self):

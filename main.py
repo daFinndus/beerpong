@@ -5,7 +5,11 @@ from threading import Thread
 
 if __name__ == "__main__":
     camera = camera.my_camera.MyCamera()
-    gui = gui.my_gui.MyGUI()
+    if camera.open_camera():
+        gui = gui.my_gui.MyGUI()
+        gui.run(camera)
+    else:
+        print("Could not open camera. Exiting.")
 
     camera_thread = Thread(target=camera.run)
 
