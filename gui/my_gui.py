@@ -148,12 +148,17 @@ class MyGUI:
         self.score_label.configure(text=f"Score: {self.root_counter}")
 
     def run(self, camera):
+        hit_cup = None
+
         while True:
             camera.get_cup_positions()
             scaled_cup_positions = camera.scale_positions(camera_resolution=(640, 480),
                                                           gui_size=(self.canvas_width, self.canvas_height))
             self.draw_cups(scaled_cup_positions)
-            hit_cup = camera.check_ball_in_cup()
+            for cup in camera.cup_positions:
+                for center, radius in zip(camera.ball_centers, camera.ball_radii):
+                    hit_cup = camera.check_ball_in_cup(center, radius, cup)
+
             if hit_cup:
                 self.gray_out_cup(hit_cup)
             self.root.update()
