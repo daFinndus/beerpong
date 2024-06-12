@@ -94,9 +94,9 @@ class MyGUI:
         self.canvas.pack_forget()
 
     def run(self, camera):
-        self.hit_cups = []
-
         while True:
+            self.hit_cups = []
+
             scaled_cup_positions = camera.scale_positions(camera_resolution=(640, 480),
                                                           gui_size=(self.canvas_width, self.canvas_height))
 
