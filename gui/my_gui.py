@@ -107,5 +107,5 @@ class MyGUI:
                     if hit_cup and hit_cup not in self.hit_cups:
                         self.hit_cups.append(hit_cup)
 
-            self.draw_cups(scaled_cup_positions)
+            self.draw_cups(camera.cup_positions)
             self.root.update()
