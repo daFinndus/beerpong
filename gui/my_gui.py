@@ -14,7 +14,7 @@ class MyGUI:
         self.label = ctk.CTkLabel(self.root, text="Beerpong", font=("Arial", 24))
         self.label.pack(padx=20, pady=20)
 
-        self.root.counter = 0
+        self.root_counter = 0
         self.click_counter = 0
         self.num_circles = 8
         self.canvas_width = 500
@@ -34,7 +34,7 @@ class MyGUI:
         self.message_label = ctk.CTkLabel(self.root, text="", font=("Helvetica", 16))
         self.message_label.pack()
 
-        self.score_label = ctk.CTkLabel(self.root, text=f"Score: {self.root.counter}", font=("Helvetica", 16))
+        self.score_label = ctk.CTkLabel(self.root, text=f"Score: {self.root_counter}", font=("Helvetica", 16))
         self.myentry.bind("<Return>", lambda event: self.display_name())
 
         self.reset_game_button = ctk.CTkButton(self.root, text="Reset Score", command=self.reset_game)
@@ -139,12 +139,23 @@ class MyGUI:
         self.root.mainloop()
     """
 
+    def gray_out_cup(self, cup_position):
+        x, y, radius = cup_position
+        self.canvas.create_oval(
+            x - radius, y - radius, x + radius, y + radius, fill="gray", outline="black"
+        )
+        self.root_counter += 1
+        self.score_label.configure(text=f"Score: {self.root_counter}")
+
     def run(self, camera):
         while True:
             camera.get_cup_positions()
             scaled_cup_positions = camera.scale_positions(camera_resolution=(640, 480),
                                                           gui_size=(self.canvas_width, self.canvas_height))
             self.draw_cups(scaled_cup_positions)
+            hit_cup = camera.check_ball_in_cup()
+            if hit_cup:
+                self.gray_out_cup(hit_cup)
             self.root.update()
 
 
@@ -155,4 +166,3 @@ if __name__ == "__main__":
         gui.run(camera)
     else:
         print("Could not open camera. Exiting.")
-
