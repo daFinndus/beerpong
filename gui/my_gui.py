@@ -155,4 +155,3 @@ if __name__ == "__main__":
         gui.run(camera)
     else:
         print("Could not open camera. Exiting.")
-

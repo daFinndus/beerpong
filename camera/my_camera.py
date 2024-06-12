@@ -198,9 +198,6 @@ class MyCamera:
 
                         if hit:
                             print(f"Ball is in cup at position: {hit[0], hit[1]} with radius: {hit[2]}")
-                            break
-                        else:
-                            print(f"Ball: {center} is not in any cup.")
 
                 try:
                     cv2.imshow("Image", image)
