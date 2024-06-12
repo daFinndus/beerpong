@@ -91,8 +91,8 @@ class MyCamera:
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         # Define the range of white color in RGB
-        rgb_lower = np.array([150, 170, 170])
-        rgb_upper = np.array([220, 220, 220])
+        rgb_lower = np.array([0, 0, 220])
+        rgb_upper = np.array([255, 30, 255])
 
         # Convert lower bound RGB to HSV
         hsv_lower = cv2.cvtColor(np.uint8([[rgb_lower]]), cv2.COLOR_BGR2HSV)[0][0]
