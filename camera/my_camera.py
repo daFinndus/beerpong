@@ -116,7 +116,6 @@ class MyCamera:
             return None
 
         (x, y, cup_radius) = cup
-        print(f"Still have a cup with radius: {cup_radius} and position: {x, y}")
         distance = np.sqrt((ball_center[0] - x) ** 2 + (ball_center[1] - y) ** 2)
 
         if distance < cup_radius - ball_radius:
@@ -134,14 +133,14 @@ class MyCamera:
             _, cups = self.track_cups(initial_image)
             print(f"Detected cups: {cups}")
 
-            # Draw a circle around each cup
-            for cup in cups:
-                cv2.circle(initial_image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
-
         while True:
             image = self.capture_image()
             if image is not None:
                 self.track_ball(image)
+
+                # Draw a circle around each cup
+                for cup in self.cup_positions:
+                    cv2.circle(initial_image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
 
                 for cup in self.cup_positions:
                     for center, radius in zip(self.ball_centers, self.ball_radii):
