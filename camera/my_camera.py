@@ -92,11 +92,11 @@ class MyCamera:
         hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 
         # Define the range of white color in HSV
-        white_upper_0 = np.array([130, 50, 150])
+        white_upper_0 = np.array([130, 80, 150])
         white_lower_0 = np.array([0, 0, 50])
 
         # Different white range
-        white_upper_1 = np.array([180, 100, 255])
+        white_upper_1 = np.array([180, 150, 255])
         white_lower_1 = np.array([0, 0, 200])
 
         # Create masks for red color
@@ -107,8 +107,8 @@ class MyCamera:
         # Find contours in the red mask
         contours, _ = cv2.findContours(white_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        min_radius = 100
-        max_radius = 130
+        min_radius = 80
+        max_radius = 110
 
         # Store cups with their positions in our list
         cups = [(int(x), int(y), int(radius)) for cnt in contours if cv2.contourArea(cnt) > 500 for ((x, y), radius) in
