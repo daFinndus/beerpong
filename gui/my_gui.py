@@ -49,7 +49,7 @@ class MyGUI:
         for cup in cup_positions:
             x, y, radius = cup
 
-            if (x, y, radius) in self.hit_cups:
+            if cup in self.hit_cups:
                 print(f"Cup at position: {x, y} with radius: {radius} is in the hit_cups list!")
                 self.root_counter += 1
                 self.score_label.configure(text=f"Score: {self.root_counter}")

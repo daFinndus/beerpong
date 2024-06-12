@@ -91,7 +91,6 @@ class MyCamera:
 
                     self.ball_centers.append(center)
                     self.ball_radii.append(radius)
-                    print(f"Ball at position: {center} with radius: {radius}")
 
         return image
 
@@ -194,9 +193,6 @@ class MyCamera:
                 for cup in self.cup_positions:
                     for center, radius in zip(self.ball_centers, self.ball_radii):
                         hit = self.check_ball_in_cup(center, radius, cup)
-
-                        if hit:
-                            print(f"Ball is in cup at position: {hit[0], hit[1]} with radius: {hit[2]}")
 
                 try:
                     cv2.imshow("Image", image)
