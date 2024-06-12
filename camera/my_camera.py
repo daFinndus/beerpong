@@ -116,6 +116,7 @@ class MyCamera:
             return None
 
         (x, y, cup_radius) = cup
+        print(f"Still have a cup with radius: {cup_radius} and position: {x, y}")
         distance = np.sqrt((ball_center[0] - x) ** 2 + (ball_center[1] - y) ** 2)
 
         if distance < cup_radius - ball_radius:
