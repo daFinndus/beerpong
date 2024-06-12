@@ -189,7 +189,6 @@ class MyCamera:
                 # Draw a circle around each cup
                 for cup in self.cup_positions:
                     cv2.circle(image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
-                    print("Currently have this cup: ", cup.x, cup.y, cup.radius)
 
                 for cup in self.cup_positions:
                     for center, radius in zip(self.ball_centers, self.ball_radii):
