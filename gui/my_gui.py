@@ -47,6 +47,10 @@ class MyGUI:
         self.canvas.delete("all")  # Clear the canvas before drawing
 
         for cup in cup_positions:
+            x = cup[0] / 2.06
+            y = cup[1] / 2.06
+            radius = cup[2] / 2.06
+
             x, y, radius = cup
 
             print(f"Comparing cup at position: {x, y, radius} with hit_cups: {self.hit_cups}")
@@ -107,7 +111,7 @@ class MyGUI:
         while True:
             self.hit_cups = []
 
-            scaled_cup_positions = self.camera.scale_positions(camera_resolution=(640, 480),
+            scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 768),
                                                                gui_size=(self.canvas_width, self.canvas_height))
 
             print("Scaled cup positions: ", scaled_cup_positions)
