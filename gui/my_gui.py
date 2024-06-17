@@ -96,8 +96,6 @@ class MyGUI:
             elapsed_time = time.time() - self.start_time
             self.message_label.configure(text=f"Time: {elapsed_time:.2f} seconds")
             self.timer_id = self.root.after(100, self.update_timer)
-        else:
-            self.end_game()
 
     def end_game(self):
         elapsed_time = time.time() - self.start_time
