@@ -91,9 +91,8 @@ class MyGUI:
             self.start_time = time.time()
             self.update_timer()
 
-            # Hide the highscore list
-            if hasattr(self, 'highscore_label'):
-                self.highscore_label.text = ""
+            # Hide highscores if displayed
+            if hasattr(self, 'highscore_label') and self.highscore_label is not None:
                 self.highscore_label.pack_forget()
 
     def update_timer(self):
@@ -122,7 +121,7 @@ class MyGUI:
         highscores_text = "Highscores:\n"
         for name, time in self.highscores:
             highscores_text += f"{name}: {time:.2f} seconds\n"
-        if hasattr(self, 'highscore_label'):
+        if hasattr(self, 'highscore_label') and self.highscore_label is not None:
             self.highscore_label.configure(text=highscores_text)
         else:
             self.highscore_label = ctk.CTkLabel(self.root, text=highscores_text, font=("Helvetica", 16))
