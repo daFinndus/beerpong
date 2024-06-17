@@ -1,10 +1,9 @@
 import customtkinter as ctk
 
-from camera.my_camera import MyCamera
-
 
 class MyGUI:
     def __init__(self):
+        self.cup_positions = None
         self.radius = 15
         self.gap = 5
         self.root = ctk.CTk()
@@ -100,7 +99,9 @@ class MyGUI:
         while True:
             self.hit_cups = []
 
-            scaled_cup_positions = camera.scale_positions(camera_resolution=(640, 480),
+            self.cup_positions = camera.get_cup_positions()
+
+            scaled_cup_positions = camera.scale_positions(camera_resolution=(1024, 768),
                                                           gui_size=(self.canvas_width, self.canvas_height))
 
             for cup in camera.cup_positions:
