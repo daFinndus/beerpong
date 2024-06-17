@@ -1,6 +1,7 @@
 import time
 import customtkinter as ctk
 import camera.my_camera as my_camera
+import os
 
 
 class MyGUI:
@@ -30,20 +31,25 @@ class MyGUI:
         self.myentry = ctk.CTkEntry(self.root, font=("Arial", 16))
         self.myentry.pack()
 
-        self.submit_button = ctk.CTkButton(self.root, text="Submit", command=self.display_name)
+        self.submit_button = ctk.CTkButton(self.root, text="Submit", command=self.start_game)
         self.submit_button.pack(pady=10)
 
         self.message_label = ctk.CTkLabel(self.root, text="", font=("Helvetica", 16))
         self.message_label.pack()
 
         self.score_label = ctk.CTkLabel(self.root, text=f"Score: {self.root_counter}", font=("Helvetica", 16))
-        self.myentry.bind("<Return>", lambda event: self.display_name())
+        self.myentry.bind("<Return>", lambda event: self.start_game())
 
         self.reset_game_button = ctk.CTkButton(self.root, text="Reset Score", command=self.reset_game)
         self.reset_all_button = ctk.CTkButton(self.root, text="Reset All", command=self.reset_all)
 
         self.hit_cups = []  # Here are all cups that are currently hit
         self.locked_cups = []  # Here are all cups that were already hit
+
+        self.start_time = None
+        self.highscore_file = "highscores.txt"
+
+        self.load_highscores()
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
@@ -67,9 +73,10 @@ class MyGUI:
                 x - radius, y - radius, x + radius, y + radius, fill=color, outline="black"
             )
 
-    def display_name(self):
+    def start_game(self):
         name = self.myentry.get()
         if name:
+            self.name = name
             self.myentry.pack_forget()
             self.submit_button.pack_forget()
             self.instruction_label.pack_forget()
@@ -78,16 +85,61 @@ class MyGUI:
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
             self.canvas.pack()
+            self.start_time = time.time()
+            self.update_timer()
+
+    def update_timer(self):
+        if len(self.hit_cups) < 6:
+            elapsed_time = time.time() - self.start_time
+            self.message_label.configure(text=f"Time: {elapsed_time:.2f} seconds")
+            self.timer_id = self.root.after(100, self.update_timer)
+        else:
+            self.end_game()
+
+    def end_game(self):
+        elapsed_time = time.time() - self.start_time
+        self.save_highscore(self.name, elapsed_time)
+        self.load_highscores()
+        self.root.after_cancel(self.timer_id)  # Stop the timer
+        self.reset_game()
+
+    def save_highscore(self, name, time):
+        with open(self.highscore_file, "a") as file:
+            file.write(f"{name},{time:.2f}\n")
+
+    def load_highscores(self):
+        if not os.path.exists(self.highscore_file):
+            with open(self.highscore_file, "w"):
+                pass
+        self.highscores = []
+        with open(self.highscore_file, "r") as file:
+            for line in file:
+                name, time = line.strip().split(",")
+                self.highscores.append((name, float(time)))
+        self.highscores.sort(key=lambda x: x[1])
+        self.display_highscores()
+
+    def display_highscores(self):
+        highscores_text = "Highscores:\n"
+        for name, time in self.highscores:
+            highscores_text += f"{name}: {time:.2f} seconds\n"
+        if hasattr(self, 'highscore_label'):
+            self.highscore_label.configure(text=highscores_text)
+        else:
+            self.highscore_label = ctk.CTkLabel(self.root, text=highscores_text, font=("Helvetica", 16))
+            self.highscore_label.pack(pady=10)
 
     def display_message(self, message):
         self.message_label.configure(text=message)
         self.root.update()
 
     def reset_game(self):
-        if self.click_counter == 10:
-            self.root.counter = 0
-            self.score_label.configure(text=f"Score: {self.root.counter}")
-            self.canvas.delete("all")
+        self.root_counter = 0
+        self.score_label.configure(text=f"Score: {self.root_counter}")
+        self.canvas.delete("all")
+        self.message_label.configure(text="")
+        self.hit_cups = []
+        self.locked_cups = []
 
     def reset_all(self):
         self.reset_game()
@@ -128,13 +180,14 @@ class MyGUI:
                 self.score_label.configure(text=f"Score: {self.root_counter}")
 
             if not self.hit_cups:
-                self.root.counter = 0
-                self.score_label.configure(text=f"Score: {self.root.counter}")
+                self.root_counter = 0
+                self.score_label.configure(text=f"Score: {self.root_counter}")
 
             self.root.update()
 
-            # Check if score is 10
-            if self.root_counter == 10:
+            # Check if all six cups are hit
+            if len(self.hit_cups) == 6:
                 self.display_message("You have won the game!")
                 time.sleep(2)
+                self.end_game()
                 self.reset_game()
