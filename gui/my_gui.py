@@ -133,7 +133,6 @@ class MyGUI:
 
     def reset_all(self):
         self.root_counter = 0
-        self.canvas.delete("all")
         self.instruction_label.pack()
         self.myentry.delete(0, "end")
         self.myentry.pack()
@@ -149,7 +148,7 @@ class MyGUI:
 
         # Update the highscore list
         self.save_highscore(self.name, time.time() - self.start_time)
-        self.load_highscores()  # Hier wird load_highscores() aufgerufen
+        self.load_highscores()
 
     def run(self):
         while self.camera.initial_image is None:
