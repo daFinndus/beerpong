@@ -100,7 +100,7 @@ class MyGUI:
             self.update_timer()
 
     def update_timer(self):
-        if len(self.hit_cups) < 6:
+        if len(self.hit_cups) < 6 and self.game_running:
             elapsed_time = time.time() - self.start_time
             self.message_label.configure(text=f"Time: {elapsed_time:.2f} seconds")
             self.timer_id = self.root.after(100, self.update_timer)
@@ -150,7 +150,6 @@ class MyGUI:
             self.highscore_label.pack(pady=10)
         self.hit_cups = []
         self.locked_cups = []
-        self.start_time = None
 
         # Update the highscore list
         self.save_highscore(self.name, time.time() - self.start_time)
