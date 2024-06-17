@@ -43,7 +43,6 @@ class MyGUI:
         self.score_label = ctk.CTkLabel(self.root, text=f"Score: {self.root_counter}", font=("Helvetica", 16))
         self.myentry.bind("<Return>", lambda event: self.start_game())
 
-        self.reset_game_button = ctk.CTkButton(self.root, text="Reset Score", command=self.reset_game)
         self.reset_all_button = ctk.CTkButton(self.root, text="Reset All", command=self.reset_all)
 
         self.hit_cups = []  # Here are all cups that are currently hit
@@ -86,7 +85,6 @@ class MyGUI:
             self.submit_button.pack_forget()
             self.instruction_label.pack_forget()
             self.message_label.configure(text=f"{name}")
-            self.reset_game_button.pack(pady=10)
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
             self.canvas.pack()
@@ -105,7 +103,7 @@ class MyGUI:
         elapsed_time = time.time() - self.start_time
         self.save_highscore(self.name, elapsed_time)
         self.load_highscores()
-        self.root.after_cancel(self.timer_id)  # Stop the timer
+        self.root.after_cancel(self.timer_id)
         self.reset_game()
 
     def save_highscore(self, name, time):
@@ -148,11 +146,11 @@ class MyGUI:
 
     def reset_all(self):
         self.reset_game()
+        self.root.after_cancel(self.timer_id)
         self.message_label.configure(text="Input your name:")
         self.myentry.delete(0, "end")
         self.myentry.pack()
         self.submit_button.pack(pady=10)
-        self.reset_game_button.pack_forget()
         self.reset_all_button.pack_forget()
         self.score_label.pack_forget()
         self.canvas.pack_forget()
@@ -191,7 +189,7 @@ class MyGUI:
             self.root.update()
 
             # Check if all six cups are hit
-            if len(self.hit_cups) == 6:
+            if len(self.hit_cups) == len(self.cup_positions):
                 self.display_message("You have won the game!")
                 time.sleep(2)
                 self.end_game()
