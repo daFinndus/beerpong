@@ -61,6 +61,8 @@ class MyGUI:
             else:
                 color = "red"
 
+            x, y, radius = cup
+
             self.canvas.create_oval(
                 x - radius, y - radius, x + radius, y + radius, fill=color, outline="black"
             )
