@@ -81,6 +81,7 @@ class MyGUI:
             )
 
     def start_game(self):
+        self.game_running = True
         name = self.myentry.get()
         if name:
             self.game_running = True
@@ -134,6 +135,7 @@ class MyGUI:
         self.root.update()
 
     def reset_all(self):
+        self.game_running = False
         self.message_label.pack_forget()
         self.reset_all_button.pack_forget()
         self.score_label.pack_forget()
@@ -187,3 +189,5 @@ class MyGUI:
             self.root.update()
 
             # Check if all six cups are hit
+            if len(self.hit_cups) == 6 and self.game_running:
+                self.display_message("You won!")
