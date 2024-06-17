@@ -191,5 +191,4 @@ class MyGUI:
             # Check if all six cups are hit
             if len(self.hit_cups) == len(self.cup_positions):
                 self.display_message("You have won the game!")
-                time.sleep(2)
                 self.end_game()
