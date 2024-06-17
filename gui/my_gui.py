@@ -139,11 +139,13 @@ class MyGUI:
         self.root_counter = 0
         self.score_label.configure(text=f"Score: {self.root_counter}")
         self.canvas.delete("all")
+        self.myentry.delete(0, "end")
+        self.myentry.pack()
+        self.submit_button.pack(pady=10)
         self.message_label.configure(text="")
         self.hit_cups = []
         self.locked_cups = []
         self.root.after_cancel(self.timer_id)
-        self.message_label.configure(text="Input your name:")
         self.reset_all_button.pack_forget()
         self.score_label.pack_forget()
         self.canvas.pack_forget()
@@ -152,9 +154,7 @@ class MyGUI:
         self.save_highscore(self.name, time.time() - self.start_time)
         self.load_highscores()  # Hier wird load_highscores() aufgerufen
 
-        self.myentry.delete(0, "end")
-        self.myentry.pack()
-        self.submit_button.pack(pady=10)
+
 
 
     def run(self):
