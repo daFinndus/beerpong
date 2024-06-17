@@ -54,9 +54,9 @@ class MyGUI:
         self.highscore_file = "highscores.txt"
 
         self.highscores = []
+        self.highscore_label = None  # Initialisierung auf None
         self.load_highscores()
-        self.highscore_label = ctk.CTkLabel(self.root, text="Highscores:", font=("Helvetica", 16))
-        self.highscore_label.pack(pady=10)
+        self.highscore_label.pack(pady=10)  # Highscores-Label anzeigen
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
@@ -88,7 +88,8 @@ class MyGUI:
             self.myentry.pack_forget()
             self.instruction_label.pack_forget()
             self.submit_button.pack_forget()
-            self.highscore_label.pack_forget()
+            if self.highscore_label:
+                self.highscore_label.pack_forget()
             self.message_label.configure(text=f"{name}")
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
@@ -122,7 +123,11 @@ class MyGUI:
         highscores_text = "Highscores:\n"
         for name, time in self.highscores:
             highscores_text += f"{name}: {time:.2f} seconds\n"
+        if self.highscore_label:
             self.highscore_label.configure(text=highscores_text)
+        else:
+            self.highscore_label = ctk.CTkLabel(self.root, text=highscores_text, font=("Helvetica", 16))
+            self.highscore_label.pack(pady=10)
 
     def display_message(self, message):
         self.message_label.configure(text=message)
@@ -138,7 +143,8 @@ class MyGUI:
         self.myentry.delete(0, "end")
         self.myentry.pack()
         self.submit_button.pack(pady=10)
-        self.highscore_label.pack(pady=10)
+        if self.highscore_label:
+            self.highscore_label.pack(pady=10)
         self.hit_cups = []
         self.locked_cups = []
         self.root.after_cancel(self.timer_id)
@@ -181,5 +187,3 @@ class MyGUI:
             self.root.update()
 
             # Check if all six cups are hit
-            if len(self.hit_cups) == len(self.cup_positions) and self.game_running:
-                self.display_message("You have won the game!")
