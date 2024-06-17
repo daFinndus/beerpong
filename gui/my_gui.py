@@ -123,7 +123,7 @@ class MyGUI:
             # Calculate the current score
             if self.hit_cups:
                 hit_time = time.time()
-                while self.hit_cups and time.time() - hit_time < 2:
+                while self.hit_cups and time.time() - hit_time > 2:
                     self.root_counter += len(self.hit_cups)
                     self.score_label.configure(text=f"Score: {self.root_counter}")
                     self.root.update()
