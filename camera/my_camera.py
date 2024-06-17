@@ -122,7 +122,6 @@ class MyCamera:
 
         for cup in cups:
             cv2.circle(image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
-            print(f"Cup at position: {cup[0], cup[1]} with radius: {cup[2]}")
 
         self.cup_positions = cups
         return image, cups
@@ -185,7 +184,6 @@ class MyCamera:
                 # Draw a circle around each cup
                 for cup in self.cup_positions:
                     cv2.circle(image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
-                    print(f"Cup at position: {cup[0], cup[1]} with radius: {cup[2]}")
 
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break

@@ -133,6 +133,7 @@ class MyGUI:
         self.load_highscores()
         self.root.after_cancel(self.timer_id)
         self.reset_all()
+        self.display_message("You have won the game!")
 
     def reset_game(self):
         self.name = None
@@ -192,4 +193,3 @@ class MyGUI:
                 self.display_message("You have won the game!")
                 time.sleep(2)
                 self.end_game()
-                self.start_game()
