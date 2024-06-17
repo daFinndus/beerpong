@@ -94,6 +94,7 @@ class MyGUI:
             self.message_label.configure(text=f"{name}")
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
+            self.message_label.pack(pady=10)
             self.canvas.pack()
             self.start_time = time.time()
             self.update_timer()
