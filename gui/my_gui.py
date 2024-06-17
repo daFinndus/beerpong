@@ -47,9 +47,9 @@ class MyGUI:
         self.canvas.delete("all")  # Clear the canvas before drawing
 
         for cup in cup_positions:
-            x = cup[0] / 2.06
-            y = cup[1] / 2.06
-            radius = cup[2] / 2.06
+            x = cup[0] * 2.06
+            y = cup[1] * 2.06
+            radius = cup[2] * 2.06
 
             x, y, radius = cup
 
