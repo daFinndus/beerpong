@@ -1,11 +1,13 @@
 import time
 import customtkinter as ctk
+import camera.my_camera as my_camera
 import os
 
 
 class MyGUI:
     def __init__(self, camera):
         self.name = None
+
         self.timer_id = None
         self.camera = camera
         self.cup_positions = None
@@ -43,8 +45,8 @@ class MyGUI:
 
         self.reset_all_button = ctk.CTkButton(self.root, text="Reset All", command=self.reset_all)
 
-        self.hit_cups = []  # Hier sind alle Cups, die aktuell getroffen wurden
-        self.locked_cups = []  # Hier sind alle Cups, die bereits getroffen wurden
+        self.hit_cups = []  # Here are all cups that are currently hit
+        self.locked_cups = []  # Here are all cups that were already hit
 
         self.start_time = None
         self.highscore_file = "highscores.txt"
@@ -54,7 +56,7 @@ class MyGUI:
         self.highscore_label = None
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
-        self.canvas.delete("all")  # Löscht das Canvas vor dem Zeichnen
+        self.canvas.delete("all")  # Clear the canvas before drawing
         self.score_label.configure(text=f"Score: {self.root_counter}")
 
         for cup in cup_positions:
@@ -82,31 +84,18 @@ class MyGUI:
             self.myentry.pack_forget()
             self.submit_button.pack_forget()
             self.instruction_label.pack_forget()
-            if self.highscore_label:
-                self.highscore_label.pack_forget()
             self.message_label.configure(text=f"{name}")
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
             self.canvas.pack()
             self.start_time = time.time()
             self.update_timer()
-            self.track_cups()  # Starte das Cup-Tracking hier
 
     def update_timer(self):
-        if len(self.hit_cups) < len(self.cup_positions):
+        if len(self.hit_cups) < 6:
             elapsed_time = time.time() - self.start_time
             self.message_label.configure(text=f"Time: {elapsed_time:.2f} seconds")
             self.timer_id = self.root.after(100, self.update_timer)
-        else:
-            self.end_game()
-
-    def end_game(self):
-        elapsed_time = time.time() - self.start_time
-        self.save_highscore(self.name, elapsed_time)
-        self.load_highscores()
-        self.root.after_cancel(self.timer_id)
-        self.reset_game()
-        self.reset_all()
 
     def save_highscore(self, name, time):
         with open(self.highscore_file, "a") as file:
@@ -138,6 +127,13 @@ class MyGUI:
         self.message_label.configure(text=message)
         self.root.update()
 
+    def end_game(self):
+        elapsed_time = time.time() - self.start_time
+        self.save_highscore(self.name, elapsed_time)
+        self.load_highscores()
+        self.root.after_cancel(self.timer_id)
+        self.reset_all()
+
     def reset_game(self):
         self.name = None
         self.root_counter = 0
@@ -157,9 +153,14 @@ class MyGUI:
         self.reset_all_button.pack_forget()
         self.score_label.pack_forget()
         self.canvas.pack_forget()
-        self.display_highscores()
 
     def run(self):
+        while self.camera.initial_image is None:
+            print("Initial image wasn't taken yet")
+
+        _, self.cup_positions = self.camera.track_cups(self.camera.initial_image)
+        print(f"Detected cups: {self.cup_positions}")
+
         while True:
             self.hit_cups = []
 
@@ -175,7 +176,7 @@ class MyGUI:
 
             self.draw_cups(scaled_cup_positions, self.cup_positions)
 
-            # Berechne den aktuellen Score
+            # Calculate the current score
             if self.hit_cups:
                 self.root_counter = len(self.hit_cups)
                 self.score_label.configure(text=f"Score: {self.root_counter}")
@@ -186,9 +187,8 @@ class MyGUI:
 
             self.root.update()
 
-            # Überprüfe, ob alle Cups getroffen wurden
+            # Check if all six cups are hit
             if len(self.hit_cups) == len(self.cup_positions):
                 self.display_message("You have won the game!")
                 time.sleep(2)
                 self.end_game()
-                break
