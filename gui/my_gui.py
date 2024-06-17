@@ -43,13 +43,11 @@ class MyGUI:
 
         self.hit_cups = []
 
-    def draw_cups(self, cup_positions):
+    def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
 
         for cup in cup_positions:
-            x = int(cup[0] * 2.06)
-            y = int(cup[1] * 2.06)
-            radius = int(cup[2] * 2.06)
+            x, y, radius = cup
 
             print(f"Comparing cup at position: {x, y, radius} with hit_cups: {self.hit_cups}")
 
@@ -61,7 +59,11 @@ class MyGUI:
             else:
                 color = "red"
 
-            x, y, radius = cup
+            index = cup_positions.index(cup)
+
+            x = scaled_cup_positions[index][0]
+            y = scaled_cup_positions[index][1]
+            radius = scaled_cup_positions[index][2]
 
             self.canvas.create_oval(
                 x - radius, y - radius, x + radius, y + radius, fill=color, outline="black"
@@ -125,7 +127,7 @@ class MyGUI:
                     if hit_cup and hit_cup not in self.hit_cups:
                         self.hit_cups.append(hit_cup)
 
-            self.draw_cups(scaled_cup_positions)
+            self.draw_cups(scaled_cup_positions, self.cup_positions)
             self.root.update()
 
             # Check if score is 10
