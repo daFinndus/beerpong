@@ -134,7 +134,6 @@ class MyGUI:
         self.message_label.configure(text=message)
         self.root.update()
 
-
     def reset_all(self):
         self.name = None
         self.root_counter = 0
@@ -145,6 +144,7 @@ class MyGUI:
         self.locked_cups = []
         self.root.after_cancel(self.timer_id)
         self.message_label.configure(text="Input your name:")
+        self.highscore_label.pack_forget()
 
         # Update the highscore list
         self.save_highscore(self.name, time.time() - self.start_time)
