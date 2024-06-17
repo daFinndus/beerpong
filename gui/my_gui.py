@@ -159,7 +159,7 @@ class MyGUI:
         self.canvas.pack_forget()
         self.display_highscores()
 
-    def track_cups(self):
+    def run(self):
         while True:
             self.hit_cups = []
 
