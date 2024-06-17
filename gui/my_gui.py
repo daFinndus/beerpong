@@ -134,18 +134,6 @@ class MyGUI:
         self.message_label.configure(text=message)
         self.root.update()
 
-    def end_game(self):
-        if hasattr(self, 'highscore_label') and self.highscore_label is not None:
-            self.highscore_label.pack(pady=10)
-
-        self.game_running = False
-        elapsed_time = time.time() - self.start_time
-        self.save_highscore(self.name, elapsed_time)
-        self.load_highscores()
-        self.root.after_cancel(self.timer_id)
-        self.reset_all()
-        self.display_message("You have won the game!")
-
     def reset_game(self):
         self.name = None
         self.root_counter = 0
@@ -202,4 +190,3 @@ class MyGUI:
             # Check if all six cups are hit
             if len(self.hit_cups) == len(self.cup_positions) and self.game_running:
                 self.display_message("You have won the game!")
-                self.end_game()
