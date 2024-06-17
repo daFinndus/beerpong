@@ -157,7 +157,6 @@ class MyGUI:
 
     def reset_all(self):
         self.reset_game()
-        self.display_highscores()
         self.root.after_cancel(self.timer_id)
         self.message_label.configure(text="Input your name:")
         self.myentry.delete(0, "end")
