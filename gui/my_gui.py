@@ -193,4 +193,4 @@ class MyGUI:
                 self.display_message("You have won the game!")
                 time.sleep(2)
                 self.end_game()
-                self.reset_game()
+                self.reset_all()
