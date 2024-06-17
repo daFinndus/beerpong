@@ -104,7 +104,7 @@ class MyGUI:
             scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 768),
                                                                gui_size=(self.canvas_width, self.canvas_height))
 
-            for cup in self.camera.cup_positions:
+            for cup in scaled_cup_positions:
                 for center, radius in zip(self.camera.ball_centers, self.camera.ball_radii):
                     hit_cup = self.camera.check_ball_in_cup(center, radius, cup)
 
