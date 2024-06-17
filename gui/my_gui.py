@@ -84,7 +84,7 @@ class MyGUI:
         if name:
             self.game_running = True
             self.name = name
-            self.myentry.pack_forget()
+            self.instruction_label.pack_forget()
             self.submit_button.pack_forget()
             self.highscore_label.pack_forget()
             self.message_label.configure(text=f"{name}")
@@ -135,17 +135,17 @@ class MyGUI:
         self.root.update()
 
     def reset_all(self):
-        self.name = None
         self.root_counter = 0
-        self.score_label.configure(text=f"Score: {self.root_counter}")
         self.canvas.delete("all")
+        self.instruction_label.pack()
         self.myentry.delete(0, "end")
         self.myentry.pack()
         self.submit_button.pack(pady=10)
-        self.message_label.configure(text="")
+        self.highscore_label.pack(pady=10)
         self.hit_cups = []
         self.locked_cups = []
         self.root.after_cancel(self.timer_id)
+        self.message_label.pack_forget()
         self.reset_all_button.pack_forget()
         self.score_label.pack_forget()
         self.canvas.pack_forget()
