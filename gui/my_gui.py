@@ -114,6 +114,7 @@ class MyGUI:
             print("Cup positions: ", self.cup_positions)
 
             for cup in self.cup_positions:
+                print("Vergleiche nun cup: ", cup)
                 for center, radius in zip(self.camera.ball_centers, self.camera.ball_radii):
                     hit_cup = self.camera.check_ball_in_cup(center, radius, cup)
 
