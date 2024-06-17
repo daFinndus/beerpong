@@ -132,11 +132,11 @@ class MyGUI:
             if self.hit_cups:
                 print("hit_cups is not empty!")
                 self.root_counter = len(self.hit_cups)
-            else:
-                print("hit_cups is empty!")
-                self.root_counter = 187
+                self.root.update()
 
-            self.root.update()
+            if not self.hit_cups:
+                self.root.counter = 0
+                self.root.update()
 
             # Check if score is 10
             if self.root_counter == 10:
