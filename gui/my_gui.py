@@ -42,7 +42,8 @@ class MyGUI:
         self.reset_game_button = ctk.CTkButton(self.root, text="Reset Score", command=self.reset_game)
         self.reset_all_button = ctk.CTkButton(self.root, text="Reset All", command=self.reset_all)
 
-        self.hit_cups = []
+        self.hit_cups = []  # Here are all cups that are currently hit
+        self.locked_cups = []  # Here are all cups that were already hit
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
@@ -80,6 +81,7 @@ class MyGUI:
 
     def display_message(self, message):
         self.message_label.configure(text=message)
+        self.root.update()
 
     def reset_game(self):
         if self.click_counter == 10:
@@ -125,9 +127,14 @@ class MyGUI:
                 hit_time = time.time()
                 while self.hit_cups:
                     if time.time() - hit_time > 2:
-                        self.root_counter += len(self.hit_cups)
-                        self.score_label.configure(text=f"Score: {self.root_counter}")
-                        break
+                        for hit_cup in self.hit_cups:
+                            if hit_cup not in self.locked_cups:
+                                self.locked_cups.append(hit_cup)
+
+                        for hit_cup in self.hit_cups:
+                            if hit_cup not in self.locked_cups:
+                                self.root_counter += 1
+                                self.score_label.configure(text=f"Score: {self.root_counter}")
 
             if not self.hit_cups:
                 self.root.counter = 0
