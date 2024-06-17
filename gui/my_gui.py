@@ -134,7 +134,8 @@ class MyGUI:
         self.message_label.configure(text=message)
         self.root.update()
 
-    def reset_game(self):
+
+    def reset_all(self):
         self.name = None
         self.root_counter = 0
         self.score_label.configure(text=f"Score: {self.root_counter}")
@@ -142,9 +143,6 @@ class MyGUI:
         self.message_label.configure(text="")
         self.hit_cups = []
         self.locked_cups = []
-
-    def reset_all(self):
-        self.reset_game()
         self.root.after_cancel(self.timer_id)
         self.message_label.configure(text="Input your name:")
 
