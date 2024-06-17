@@ -53,6 +53,7 @@ class MyGUI:
 
         self.highscores = []
         self.load_highscores()
+        self.highscore_label = None
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
@@ -145,6 +146,7 @@ class MyGUI:
 
     def reset_all(self):
         self.reset_game()
+        self.display_highscores()
         self.root.after_cancel(self.timer_id)
         self.message_label.configure(text="Input your name:")
         self.myentry.delete(0, "end")
