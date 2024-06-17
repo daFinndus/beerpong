@@ -139,6 +139,7 @@ class MyGUI:
         elapsed_time = time.time() - self.start_time
         self.save_highscore(self.name, elapsed_time)
         self.load_highscores()
+        self.display_highscores()
         self.root.after_cancel(self.timer_id)
         self.reset_all()
         self.display_message("You have won the game!")
