@@ -110,7 +110,7 @@ class MyGUI:
         while True:
             self.hit_cups = []
 
-            scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 768),
+            scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 1024),
                                                                gui_size=(self.canvas_width, self.canvas_height))
 
             for cup in self.cup_positions:
@@ -124,17 +124,8 @@ class MyGUI:
 
             # Calculate the current score
             if self.hit_cups:
-                hit_time = time.time()
-                while self.hit_cups:
-                    if time.time() - hit_time > 2:
-                        for hit_cup in self.hit_cups:
-                            if hit_cup not in self.locked_cups:
-                                self.locked_cups.append(hit_cup)
-
-                        for hit_cup in self.hit_cups:
-                            if hit_cup not in self.locked_cups:
-                                self.root_counter += 1
-                                self.score_label.configure(text=f"Score: {self.root_counter}")
+                self.root_counter += 1
+                self.score_label.configure(text=f"Score: {self.root_counter}")
 
             if not self.hit_cups:
                 self.root.counter = 0
