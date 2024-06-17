@@ -130,8 +130,10 @@ class MyGUI:
 
             # Calculate the current score
             if self.hit_cups:
+                print("hit_cups is not empty!")
                 self.root_counter = len(self.hit_cups)
             else:
+                print("hit_cups is empty!")
                 self.root_counter = 0
 
             self.root.update()
