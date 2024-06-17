@@ -55,7 +55,7 @@ class MyGUI:
 
         self.highscores = []
         self.load_highscores()
-        self.highscore_label = None
+        self.highscore_label = ctk.CTkLabel(self.root, text="Highscores:", font=("Helvetica", 16))
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
@@ -86,7 +86,6 @@ class MyGUI:
             self.name = name
             self.myentry.pack_forget()
             self.submit_button.pack_forget()
-            self.instruction_label.pack_forget()
             self.highscore_label.pack_forget()
             self.message_label.configure(text=f"{name}")
             self.reset_all_button.pack(pady=10)
@@ -94,6 +93,10 @@ class MyGUI:
             self.canvas.pack()
             self.start_time = time.time()
             self.update_timer()
+
+            # Hide highscores if displayed
+            if hasattr(self, 'highscore_label') and self.highscore_label is not None:
+                self.highscore_label.pack_forget()
 
     def update_timer(self):
         if len(self.hit_cups) < 6:
