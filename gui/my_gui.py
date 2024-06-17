@@ -56,6 +56,7 @@ class MyGUI:
         self.highscores = []
         self.load_highscores()
         self.highscore_label = ctk.CTkLabel(self.root, text="Highscores:", font=("Helvetica", 16))
+        self.highscore_label.pack(pady=10)
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
