@@ -150,7 +150,7 @@ class MyGUI:
             self.highscore_label.pack(pady=10)
         self.hit_cups = []
         self.locked_cups = []
-        self.root.after_cancel(self.timer_id)
+        self.start_time = None
 
         # Update the highscore list
         self.save_highscore(self.name, time.time() - self.start_time)
