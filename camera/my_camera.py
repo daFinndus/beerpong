@@ -25,6 +25,7 @@ class MyCamera:
         self.ball_radii = []
 
         self.cup_positions = []  # Set the positions of the cups here
+        self.initial_image = None
 
     def open_camera(self):
         if not cv2.VideoCapture(self.camera_index).isOpened():
@@ -160,15 +161,15 @@ class MyCamera:
     # This is basically our main loop
     def run(self):
         print("Taking initial photo to detect cups...")
-        initial_image = self.capture_image()
-        if initial_image is not None:
-            _, cups = self.track_cups(initial_image)
+        self.initial_image = self.capture_image()
+        if self.initial_image is not None:
+            _, cups = self.track_cups(self.initial_image)
             print(f"Detected cups: {cups}")
 
             start_time = time.time()
             while time.time() - start_time < 5:
                 try:
-                    cv2.imshow("Initial Image", initial_image)
+                    cv2.imshow("Initial Image", self.initial_image)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
                 except Exception as e:

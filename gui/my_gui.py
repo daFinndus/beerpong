@@ -4,8 +4,8 @@ import camera.my_camera as my_camera
 
 class MyGUI:
     def __init__(self, camera):
-        self.cup_positions = None
         self.camera = camera
+        self.cup_positions = None
         self.radius = 15
         self.gap = 5
         self.root = ctk.CTk()
@@ -98,13 +98,20 @@ class MyGUI:
         self.canvas.pack_forget()
 
     def run(self):
+        if self.camera.initial_image is not None:
+            _, self.cup_positions = self.camera.track_cups(self.camera.initial_image)
+            print(f"Detected cups: {self.cup_positions}")
+
         while True:
             self.hit_cups = []
 
             scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 768),
                                                                gui_size=(self.canvas_width, self.canvas_height))
 
-            for cup in scaled_cup_positions:
+            print("Scaled cup positions: ", scaled_cup_positions)
+            print("Cup positions: ", self.cup_positions)
+
+            for cup in self.cup_positions:
                 for center, radius in zip(self.camera.ball_centers, self.camera.ball_radii):
                     hit_cup = self.camera.check_ball_in_cup(center, radius, cup)
 
