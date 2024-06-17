@@ -87,6 +87,7 @@ class MyGUI:
             self.myentry.pack_forget()
             self.submit_button.pack_forget()
             self.instruction_label.pack_forget()
+            self.highscore_label.pack_forget()
             self.message_label.configure(text=f"{name}")
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
@@ -144,7 +145,9 @@ class MyGUI:
         self.locked_cups = []
         self.root.after_cancel(self.timer_id)
         self.message_label.configure(text="Input your name:")
-        self.highscore_label.pack_forget()
+        self.reset_all_button.pack_forget()
+        self.score_label.pack_forget()
+        self.canvas.pack_forget()
 
         # Update the highscore list
         self.save_highscore(self.name, time.time() - self.start_time)
@@ -153,9 +156,7 @@ class MyGUI:
         self.myentry.delete(0, "end")
         self.myentry.pack()
         self.submit_button.pack(pady=10)
-        self.reset_all_button.pack_forget()
-        self.score_label.pack_forget()
-        self.canvas.pack_forget()
+
 
     def run(self):
         while self.camera.initial_image is None:
