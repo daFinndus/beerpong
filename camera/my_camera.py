@@ -169,7 +169,6 @@ class MyCamera:
             start_time = time.time()
             while time.time() - start_time < 5:
                 try:
-                    cv2.imshow("Initial Image", self.initial_image)
                     if cv2.waitKey(1) & 0xFF == ord('q'):
                         break
                 except Exception as e:
@@ -186,11 +185,6 @@ class MyCamera:
                 for cup in self.cup_positions:
                     cv2.circle(image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
                     print(f"Cup at position: {cup[0], cup[1]} with radius: {cup[2]}")
-
-                try:
-                    cv2.imshow("Image", image)
-                except Exception as e:
-                    print(f"Error displaying image: {e}")
 
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
