@@ -187,10 +187,6 @@ class MyCamera:
                     cv2.circle(image, (cup[0], cup[1]), cup[2], (0, 255, 0), 2)
                     print(f"Cup at position: {cup[0], cup[1]} with radius: {cup[2]}")
 
-                for cup in self.cup_positions:
-                    for center, radius in zip(self.ball_centers, self.ball_radii):
-                        hit = self.check_ball_in_cup(center, radius, cup)
-
                 try:
                     cv2.imshow("Image", image)
                 except Exception as e:
