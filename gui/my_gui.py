@@ -124,7 +124,7 @@ class MyGUI:
 
             # Calculate the current score
             if self.hit_cups:
-                self.root_counter += 1
+                self.root_counter += len(self.hit_cups)
                 self.score_label.configure(text=f"Score: {self.root_counter}")
 
             if not self.hit_cups:
@@ -136,4 +136,5 @@ class MyGUI:
             # Check if score is 10
             if self.root_counter == 10:
                 self.display_message("You have won the game!")
-                break
+                time.sleep(2)
+                self.reset_game()
