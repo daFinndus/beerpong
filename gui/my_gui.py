@@ -91,6 +91,10 @@ class MyGUI:
             self.start_time = time.time()
             self.update_timer()
 
+            # Hide the highscore list
+            if hasattr(self, 'highscore_label'):
+                self.highscore_label.pack_forget()
+
     def update_timer(self):
         if len(self.hit_cups) < 6:
             elapsed_time = time.time() - self.start_time
