@@ -93,6 +93,7 @@ class MyGUI:
 
             # Hide the highscore list
             if hasattr(self, 'highscore_label'):
+                self.highscore_label.text = ""
                 self.highscore_label.pack_forget()
 
     def update_timer(self):
