@@ -3,9 +3,9 @@ import camera.my_camera as my_camera
 
 
 class MyGUI:
-    def __init__(self):
+    def __init__(self, camera):
         self.cup_positions = None
-        self.camera = my_camera.MyCamera()
+        self.camera = camera
         self.radius = 15
         self.gap = 5
         self.root = ctk.CTk()
