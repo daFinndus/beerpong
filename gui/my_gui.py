@@ -121,17 +121,17 @@ class MyGUI:
         highscores_text = "Highscores:\n"
         for name, time in self.highscores:
             highscores_text += f"{name}: {time:.2f} seconds\n"
-        if hasattr(self, 'highscore_label') and self.highscore_label is not None:
             self.highscore_label.configure(text=highscores_text)
-        else:
-            self.highscore_label = ctk.CTkLabel(self.root, text=highscores_text, font=("Helvetica", 16))
-            self.highscore_label.pack(pady=10)
 
     def display_message(self, message):
         self.message_label.configure(text=message)
         self.root.update()
 
     def reset_all(self):
+        self.message_label.pack_forget()
+        self.reset_all_button.pack_forget()
+        self.score_label.pack_forget()
+        self.canvas.pack_forget()
         self.root_counter = 0
         self.instruction_label.pack()
         self.myentry.delete(0, "end")
@@ -141,10 +141,6 @@ class MyGUI:
         self.hit_cups = []
         self.locked_cups = []
         self.root.after_cancel(self.timer_id)
-        self.message_label.pack_forget()
-        self.reset_all_button.pack_forget()
-        self.score_label.pack_forget()
-        self.canvas.pack_forget()
 
         # Update the highscore list
         self.save_highscore(self.name, time.time() - self.start_time)
