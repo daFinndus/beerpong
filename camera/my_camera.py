@@ -8,13 +8,8 @@ class MyCamera:
         self.camera_index = camera_index
         self.cap = cv2.VideoCapture(1)  # .VideoCapture(1) is for Windows, .VideoCapture(/dev/video0) is for Raspbian
 
-        # Set the desired width and height
-        self.width = 640
-        self.height = 480
-
-        # Set the camera resolution
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
+        self.width = int(self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        self.height = int(self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
         print("Camera resolution: {}x{}".format(self.width, self.height))
 
