@@ -98,9 +98,11 @@ class MyGUI:
         self.canvas.pack_forget()
 
     def run(self):
-        if self.camera.initial_image is not None:
-            _, self.cup_positions = self.camera.track_cups(self.camera.initial_image)
-            print(f"Detected cups: {self.cup_positions}")
+        while self.camera.initial_image is None:
+            print("Initial image wasn't taken yet")
+
+        _, self.cup_positions = self.camera.track_cups(self.camera.initial_image)
+        print(f"Detected cups: {self.cup_positions}")
 
         while True:
             self.hit_cups = []
