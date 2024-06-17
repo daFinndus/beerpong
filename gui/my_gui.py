@@ -53,7 +53,10 @@ class MyGUI:
 
             if (x, y, radius) in self.hit_cups:
                 print(f"Cup at position: {x, y} with radius: {radius} is in the hit_cups list!")
-                self.root_counter = len(self.hit_cups)
+                if self.hit_cups:
+                    self.root_counter = len(self.hit_cups)
+                else:
+                    self.root_counter = 0
                 self.score_label.configure(text=f"Score: {self.root_counter}")
                 color = "gray"
             else:
