@@ -74,6 +74,9 @@ class MyGUI:
             self.score_label.pack(padx=20, pady=20)
             self.canvas.pack()
 
+    def display_message(self, message):
+        self.message_label.configure(text=message)
+
     def reset_game(self):
         if self.click_counter == 10:
             self.root.counter = 0
@@ -109,3 +112,8 @@ class MyGUI:
 
             self.draw_cups(camera.cup_positions)
             self.root.update()
+
+            # Check if score is 10
+            if self.root_counter == 10:
+                self.display_message("You have won the game!")
+                break
