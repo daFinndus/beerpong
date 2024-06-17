@@ -95,10 +95,6 @@ class MyGUI:
             self.start_time = time.time()
             self.update_timer()
 
-            # Hide highscores if displayed
-            if hasattr(self, 'highscore_label') and self.highscore_label is not None:
-                self.highscore_label.pack_forget()
-
     def update_timer(self):
         if len(self.hit_cups) < 6:
             elapsed_time = time.time() - self.start_time
@@ -154,9 +150,6 @@ class MyGUI:
         # Update the highscore list
         self.save_highscore(self.name, time.time() - self.start_time)
         self.load_highscores()  # Hier wird load_highscores() aufgerufen
-
-
-
 
     def run(self):
         while self.camera.initial_image is None:
