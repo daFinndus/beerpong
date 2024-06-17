@@ -51,8 +51,6 @@ class MyGUI:
             y = cup[1] * 2.06
             radius = cup[2] * 2.06
 
-            x, y, radius = cup
-
             print(f"Comparing cup at position: {x, y, radius} with hit_cups: {self.hit_cups}")
 
             if (x, y, radius) in self.hit_cups:
