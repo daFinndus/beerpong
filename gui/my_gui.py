@@ -45,15 +45,12 @@ class MyGUI:
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
+        self.score_label.configure(text=f"Score: {self.root_counter}")
 
         for cup in cup_positions:
             x, y, radius = cup
 
-            print(f"Comparing cup at position: {x, y, radius} with hit_cups: {self.hit_cups}")
-
             if (x, y, radius) in self.hit_cups:
-                print(f"Cup at position: {x, y} with radius: {radius} is in the hit_cups list!")
-                self.score_label.configure(text=f"Score: {self.root_counter}")
                 color = "gray"
             else:
                 color = "red"
@@ -87,8 +84,6 @@ class MyGUI:
         if self.click_counter == 10:
             self.root.counter = 0
             self.score_label.configure(text=f"Score: {self.root.counter}")
-            self.click_counter = 0
-            self.num_circles = 8
             self.canvas.delete("all")
 
     def reset_all(self):
@@ -115,11 +110,7 @@ class MyGUI:
             scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 768),
                                                                gui_size=(self.canvas_width, self.canvas_height))
 
-            print("Scaled cup positions: ", scaled_cup_positions)
-            print("Cup positions: ", self.cup_positions)
-
             for cup in self.cup_positions:
-                print("Vergleiche nun cup: ", cup)
                 for center, radius in zip(self.camera.ball_centers, self.camera.ball_radii):
                     hit_cup = self.camera.check_ball_in_cup(center, radius, cup)
 
@@ -130,13 +121,12 @@ class MyGUI:
 
             # Calculate the current score
             if self.hit_cups:
-                print("hit_cups is not empty!")
                 self.root_counter = len(self.hit_cups)
-                self.root.update()
 
             if not self.hit_cups:
                 self.root.counter = 0
-                self.root.update()
+
+            self.root.update()
 
             # Check if score is 10
             if self.root_counter == 10:
