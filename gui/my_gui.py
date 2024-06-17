@@ -48,6 +48,8 @@ class MyGUI:
         self.hit_cups = []  # Here are all cups that are currently hit
         self.locked_cups = []  # Here are all cups that were already hit
 
+        self.game_running = False
+
         self.start_time = None
         self.highscore_file = "highscores.txt"
 
@@ -80,6 +82,7 @@ class MyGUI:
     def start_game(self):
         name = self.myentry.get()
         if name:
+            self.game_running = True
             self.name = name
             self.myentry.pack_forget()
             self.submit_button.pack_forget()
@@ -132,6 +135,7 @@ class MyGUI:
         self.root.update()
 
     def end_game(self):
+        self.game_running = False
         elapsed_time = time.time() - self.start_time
         self.save_highscore(self.name, elapsed_time)
         self.load_highscores()
@@ -194,6 +198,6 @@ class MyGUI:
             self.root.update()
 
             # Check if all six cups are hit
-            if len(self.hit_cups) == len(self.cup_positions):
+            if len(self.hit_cups) == len(self.cup_positions) and self.game_running:
                 self.display_message("You have won the game!")
                 self.end_game()
