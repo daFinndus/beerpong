@@ -135,6 +135,7 @@ class MyGUI:
         self.root.update()
 
     def reset_game(self):
+        self.name = None
         self.root_counter = 0
         self.score_label.configure(text=f"Score: {self.root_counter}")
         self.canvas.delete("all")
