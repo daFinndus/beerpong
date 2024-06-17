@@ -53,7 +53,6 @@ class MyGUI:
 
         self.highscores = []
         self.load_highscores()
-        self.highscore_label = None
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
@@ -117,6 +116,11 @@ class MyGUI:
         highscores_text = "Highscores:\n"
         for name, time in self.highscores:
             highscores_text += f"{name}: {time:.2f} seconds\n"
+        if hasattr(self, 'highscore_label'):
+            self.highscore_label.configure(text=highscores_text)
+        else:
+            self.highscore_label = ctk.CTkLabel(self.root, text=highscores_text, font=("Helvetica", 16))
+            self.highscore_label.pack(pady=10)
 
     def display_message(self, message):
         self.message_label.configure(text=message)
