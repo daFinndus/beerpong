@@ -1,9 +1,11 @@
 import customtkinter as ctk
+import camera.my_camera as my_camera
 
 
 class MyGUI:
     def __init__(self):
         self.cup_positions = None
+        self.camera = my_camera.MyCamera()
         self.radius = 15
         self.gap = 5
         self.root = ctk.CTk()
@@ -95,18 +97,16 @@ class MyGUI:
         self.score_label.pack_forget()
         self.canvas.pack_forget()
 
-    def run(self, camera):
+    def run(self):
         while True:
             self.hit_cups = []
 
-            self.cup_positions = camera.get_cup_positions()
+            scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 768),
+                                                               gui_size=(self.canvas_width, self.canvas_height))
 
-            scaled_cup_positions = camera.scale_positions(camera_resolution=(1024, 768),
-                                                          gui_size=(self.canvas_width, self.canvas_height))
-
-            for cup in camera.cup_positions:
-                for center, radius in zip(camera.ball_centers, camera.ball_radii):
-                    hit_cup = camera.check_ball_in_cup(center, radius, cup)
+            for cup in self.camera.cup_positions:
+                for center, radius in zip(self.camera.ball_centers, self.camera.ball_radii):
+                    hit_cup = self.camera.check_ball_in_cup(center, radius, cup)
 
                     if hit_cup and hit_cup not in self.hit_cups:
                         self.hit_cups.append(hit_cup)
