@@ -7,6 +7,7 @@ import os
 class MyGUI:
     def __init__(self, camera):
         self.name = None
+
         self.timer_id = None
         self.camera = camera
         self.cup_positions = None
@@ -86,7 +87,7 @@ class MyGUI:
             self.myentry.pack_forget()
             self.instruction_label.pack_forget()
             self.submit_button.pack_forget()
-            self.highscore_label.pack_forget()  # Versteckt Highscores, falls sie angezeigt wurden
+            self.highscore_label.pack_forget()
             self.message_label.configure(text=f"{name}")
             self.reset_all_button.pack(pady=10)
             self.score_label.pack(padx=20, pady=20)
@@ -124,6 +125,7 @@ class MyGUI:
             self.highscore_label.configure(text=highscores_text)
         else:
             self.highscore_label = ctk.CTkLabel(self.root, text=highscores_text, font=("Helvetica", 16))
+            self.highscore_label.pack(pady=10)
 
     def display_message(self, message):
         self.message_label.configure(text=message)
@@ -136,7 +138,7 @@ class MyGUI:
         self.myentry.delete(0, "end")
         self.myentry.pack()
         self.submit_button.pack(pady=10)
-        self.highscore_label.pack(pady=10)  # Zeigt Highscores an
+        self.highscore_label.pack(pady=10)
         self.hit_cups = []
         self.locked_cups = []
         self.root.after_cancel(self.timer_id)
@@ -147,7 +149,7 @@ class MyGUI:
 
         # Update the highscore list
         self.save_highscore(self.name, time.time() - self.start_time)
-        self.load_highscores()  # Lädt Highscores erneut, um sie anzuzeigen
+        self.load_highscores()  # Hier wird load_highscores() aufgerufen
 
     def run(self):
         while self.camera.initial_image is None:
