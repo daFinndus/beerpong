@@ -164,7 +164,7 @@ class MyCamera:
         self.initial_image = self.capture_image()
         if self.initial_image is not None:
             _, cups = self.track_cups(self.initial_image)
-            cv2.show("Initial image", self.initial_image)
+            cv2.imshow("Initial image", self.initial_image)
             print(f"Detected cups: {cups}")
 
             start_time = time.time()
