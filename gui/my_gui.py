@@ -107,7 +107,7 @@ class MyGUI:
         while True:
             self.hit_cups = []
 
-            scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 768),
+            scaled_cup_positions = self.camera.scale_positions(camera_resolution=(640, 480),
                                                                gui_size=(self.canvas_width, self.canvas_height))
 
             print("Scaled cup positions: ", scaled_cup_positions)
