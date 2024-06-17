@@ -147,6 +147,11 @@ class MyGUI:
         self.reset_game()
         self.root.after_cancel(self.timer_id)
         self.message_label.configure(text="Input your name:")
+
+        # Update the highscore list
+        self.save_highscore(self.name, time.time() - self.start_time)
+        self.load_highscores()
+
         self.myentry.delete(0, "end")
         self.myentry.pack()
         self.submit_button.pack(pady=10)
