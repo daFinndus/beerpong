@@ -6,6 +6,9 @@ import os
 
 class MyGUI:
     def __init__(self, camera):
+        self.name = None
+
+        self.timer_id = None
         self.camera = camera
         self.cup_positions = None
         self.radius = 15
@@ -49,7 +52,9 @@ class MyGUI:
         self.start_time = None
         self.highscore_file = "highscores.txt"
 
+        self.highscores = []
         self.load_highscores()
+        self.highscore_label = None
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
@@ -134,7 +139,6 @@ class MyGUI:
         self.root.update()
 
     def reset_game(self):
-        self.end_game()
         self.root_counter = 0
         self.score_label.configure(text=f"Score: {self.root_counter}")
         self.canvas.delete("all")
