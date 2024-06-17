@@ -1,3 +1,4 @@
+import time
 import customtkinter as ctk
 import camera.my_camera as my_camera
 
@@ -42,6 +43,7 @@ class MyGUI:
         self.reset_all_button = ctk.CTkButton(self.root, text="Reset All", command=self.reset_all)
 
         self.hit_cups = []
+        self.last_hit_cups_change = time.time()
 
     def draw_cups(self, scaled_cup_positions, cup_positions):
         self.canvas.delete("all")  # Clear the canvas before drawing
@@ -105,6 +107,7 @@ class MyGUI:
         print(f"Detected cups: {self.cup_positions}")
 
         while True:
+            old_hit_cups = self.hit_cups.copy()
             self.hit_cups = []
 
             scaled_cup_positions = self.camera.scale_positions(camera_resolution=(1024, 768),
@@ -119,8 +122,11 @@ class MyGUI:
 
             self.draw_cups(scaled_cup_positions, self.cup_positions)
 
+            if old_hit_cups != self.hit_cups:
+                self.last_hit_cups_change = time.time()
+
             # Calculate the current score
-            if self.hit_cups:
+            if self.hit_cups and time.time() - self.last_hit_cups_change >= 2:
                 self.root_counter = len(self.hit_cups)
                 self.score_label.configure(text=f"Score: {self.root_counter}")
 
