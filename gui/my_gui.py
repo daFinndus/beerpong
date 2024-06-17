@@ -84,6 +84,7 @@ class MyGUI:
         if name:
             self.game_running = True
             self.name = name
+            self.myentry.pack_forget()
             self.instruction_label.pack_forget()
             self.submit_button.pack_forget()
             self.highscore_label.pack_forget()
